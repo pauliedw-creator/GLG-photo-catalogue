@@ -18,8 +18,11 @@ const gallery = [
   ...slab.photos.edge.map(p => ({ key: p, alt: `${slab.material_en} — edge` })),
   ...slab.photos.wet.map(p => ({ key: p, alt: `${slab.material_en} — wet` }))
 ];
+const hasPhotos = gallery.length > 0;
+const mainPhotoSrc = hasPhotos ? `/photos/${slab.slab_id}/${gallery[0].key}-1200.webp` : '/assets/slab-placeholder.svg';
+const mainPhotoAlt = hasPhotos ? gallery[0].alt : `${slab.material_en} — no photo yet`;
 
-const ogImage = `/photos/${slab.slab_id}/${slab.photos.full[0]}-1200.webp`;
+const ogImage = hasPhotos ? `/photos/${slab.slab_id}/${gallery[0].key}-1200.webp` : '/assets/glg-og-default.png';
 const description = `${slab.material_en} · ${slab.length_cm}×${slab.width_cm}×${slab.thickness_cm} cm · ${slab.area_sqm.toFixed(2)} m² · ${slab.finish.en}`;
 
 const isSold = slab.status.en === 'sold';
@@ -40,7 +43,7 @@ const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`https://katalog.g
     <div class="slab-detail">
       <div class="slab-gallery">
         <div class="slab-gallery__main">
-          <img id="main-photo" src={`/photos/${slab.slab_id}/${gallery[0].key}-1200.webp`} alt={gallery[0].alt} loading="eager" />
+          <img id="main-photo" src={mainPhotoSrc} alt={mainPhotoAlt} loading="eager" />
         </div>
         {gallery.length > 1 && (
           <div class="slab-gallery__thumbs">
