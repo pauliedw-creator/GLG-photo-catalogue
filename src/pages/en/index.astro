@@ -69,8 +69,8 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
       {slabs.length === 0 && <div class="empty">{i18n.catalogue.results.none}</div>}
       {slabs.map(slab => {
         const fullPhoto = slab.photos.full[0];
-        const photoSrc = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp` : '';
-        const photoSrcLarge = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '';
+        const photoSrc = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp` : '/assets/slab-placeholder.svg';
+        const photoSrcLarge = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '/assets/slab-placeholder.svg';
         const isSold = slab.status.en === 'sold';
         const isReserved = slab.status.en === 'reserved';
         return (
@@ -83,13 +83,11 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
             data-date={slab.date_received}>
             <a href={`/en/slabs/${slab.slab_id}`}>
               <div class="slab-card__photo" data-status={slab.status.en}>
-                {photoSrc && (
-                  <img src={photoSrc}
-                    srcset={`${photoSrc} 400w, ${photoSrcLarge} 1200w`}
-                    sizes="(max-width: 600px) 90vw, 280px"
-                    alt={slab.material_en}
-                    loading="lazy" />
-                )}
+                <img src={photoSrc}
+                  srcset={fullPhoto ? `${photoSrc} 400w, ${photoSrcLarge} 1200w` : undefined}
+                  sizes="(max-width: 600px) 90vw, 280px"
+                  alt={slab.material_en}
+                  loading="lazy" />
                 {isSold && <span class="slab-card__badge slab-card__badge--sold">{i18n.slab.sold}</span>}
                 {isReserved && <span class="slab-card__badge slab-card__badge--reserved">{i18n.slab.reserved}</span>}
               </div>
