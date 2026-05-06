@@ -248,14 +248,13 @@ async function main() {
       skippedNoFolder++;
     }
 
-// Soft rule: track slabs missing full-face photo, but include them anyway with a flag
-if (photos.full.length === 0) {
-  skippedNoFull++;
-  // Include the slab with a 'missing_photo' flag so the site can show a placeholder
-}
+    // Track slabs missing full-face photo, but include them with a placeholder flag
+    const missingPhoto = photos.full.length === 0;
+    if (missingPhoto) skippedNoFull++;
 
     processedSlabs.push({
       ...slab,
+      missing_photo: missingPhoto,
       photos: {
         full:    photos.full.map((_, i)   => i === 0 ? 'full'   : `full-${i + 1}`),
         detail: photos.detail.map((_, i) => i === 0 ? 'detail' : `detail-${i + 1}`),
@@ -278,7 +277,7 @@ if (photos.full.length === 0) {
   console.log(`Published slabs included:    ${processedCount}`);
   console.log(`Skipped (unpublished):       ${skippedUnpublished}`);
   console.log(`Skipped (no Drive folder):   ${skippedNoFolder}`);
-  console.log(`Skipped (no full-face photo): ${skippedNoFull}`);
+  console.log(`Included with NO photo:      ${skippedNoFull}  ← will render with placeholder`);
 }
 
 main().catch(err => {
