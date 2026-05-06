@@ -1,0 +1,126 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../i18n.js';
+
+const lang = 'pl';
+const i18n = t(lang);
+
+// TODO: replace these placeholders with real values before launch
+const PHONE = '+48000000000';
+const PHONE_DISPLAY = '+48 000 000 000';
+const EMAIL = 'biuro@goldenleafgranit.pl';
+const ADDRESS = 'Nowa Dębowa Wola, Polska';
+const WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+const HCAPTCHA_SITEKEY = 'YOUR_HCAPTCHA_SITEKEY';
+---
+<Base title={i18n.contact.title} lang={lang} canonicalPath="/kontakt">
+  <div class="container">
+    <div class="page-title-block">
+      <h1>{i18n.contact.title}</h1>
+      <p class="lede">{i18n.contact.lead}</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <dl>
+          <div>
+            <dt>{i18n.contact.phone}</dt>
+            <dd><a href={`tel:${PHONE}`}>{PHONE_DISPLAY}</a></dd>
+          </div>
+          <div>
+            <dt>{i18n.contact.email}</dt>
+            <dd><a href={`mailto:${EMAIL}`}>{EMAIL}</a></dd>
+          </div>
+          <div>
+            <dt>{i18n.contact.address}</dt>
+            <dd>{ADDRESS}</dd>
+          </div>
+          <div>
+            <dt>{i18n.contact.hours}</dt>
+            <dd>{i18n.contact.hoursValue}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="contact-form">
+        <h3 style="margin-bottom: 1rem;">{i18n.contact.formTitle}</h3>
+        <form id="enquiry-form">
+          <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+          <input type="hidden" name="subject" value="Nowe zapytanie z katalogu GLG" />
+          <input type="hidden" name="from_name" value="Katalog GLG" />
+          <!-- Honeypot field — bots fill it, humans never see it -->
+          <input type="text" name="website" class="form-honeypot" tabindex="-1" autocomplete="off" />
+
+          <div class="form-row">
+            <label for="company">{i18n.contact.form.company} <span style="color: var(--gold)">*</span></label>
+            <input type="text" id="company" name="company" required />
+          </div>
+          <div class="form-row">
+            <label for="name">{i18n.contact.form.name} <span style="color: var(--gold)">*</span></label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="form-row">
+            <label for="phone">{i18n.contact.form.phone} <span style="color: var(--gold)">*</span></label>
+            <input type="tel" id="phone" name="phone" required />
+          </div>
+          <div class="form-row">
+            <label for="email">{i18n.contact.form.email}</label>
+            <input type="email" id="email" name="email" />
+          </div>
+          <div class="form-row">
+            <label for="slabIds">{i18n.contact.form.slabIds}</label>
+            <input type="text" id="slabIds" name="slabIds" placeholder="GLG-251105-01, GLG-251105-02..." />
+          </div>
+          <div class="form-row">
+            <label for="message">{i18n.contact.form.message}</label>
+            <textarea id="message" name="message"></textarea>
+          </div>
+
+          <div class="h-captcha" data-sitekey={HCAPTCHA_SITEKEY}></div>
+
+          <button type="submit" class="btn btn--primary btn--full" style="margin-top: 1rem;">
+            {i18n.contact.form.submit}
+          </button>
+          <div class="form-status" id="form-status" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
+  <script>
+    // Pre-fill slab field from query string ?slab=GLG-...
+    const params = new URLSearchParams(window.location.search);
+    const slab = params.get('slab');
+    if (slab) document.getElementById('slabIds').value = slab;
+
+    const form = document.getElementById('enquiry-form');
+    const status = document.getElementById('form-status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      // Honeypot check
+      if (form.website.value) return; // bot — silently drop
+
+      const data = new FormData(form);
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: data
+        });
+        const result = await res.json();
+        if (result.success) {
+          status.className = 'form-status success';
+          status.textContent = 'Dziękujemy. Skontaktujemy się wkrótce.';
+          form.reset();
+        } else {
+          throw new Error(result.message || 'submit failed');
+        }
+      } catch (err) {
+        status.className = 'form-status error';
+        status.textContent = 'Wystąpił błąd. Prosimy zadzwonić bezpośrednio: ' + '+48 000 000 000';
+      }
+    });
+  </script>
+</Base>

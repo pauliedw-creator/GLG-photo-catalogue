@@ -1,0 +1,150 @@
+---
+import Base from '../../layouts/Base.astro';
+import { t } from '../../i18n.js';
+import slabsData from '../../data/slabs.json';
+
+const lang = 'en';
+const i18n = t(lang);
+const slabs = slabsData.slabs || [];
+const generatedAt = slabsData.generated_at || new Date().toISOString();
+const generatedDate = new Date(generatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+const materials = [...new Set(slabs.map(s => s.material_en).filter(Boolean))].sort();
+const finishes = [...new Set(slabs.map(s => s.finish.en).filter(Boolean))].sort();
+const thicknesses = [...new Set(slabs.map(s => s.thickness_cm).filter(Boolean))].sort((a, b) => a - b);
+const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
+---
+<Base title={i18n.catalogue.title} lang={lang} canonicalPath="/en/">
+  <div class="container">
+    <div class="page-title-block">
+      <h1>{i18n.catalogue.title}</h1>
+      <p class="lede">{i18n.catalogue.subtitle}{slabs.length} {i18n.catalogue.results.slabs} · {generatedDate}</p>
+    </div>
+
+    <div class="catalogue-toolbar" role="region" aria-label="Filters">
+      <div class="filter-group">
+        <label for="f-material">{i18n.catalogue.filters.material}</label>
+        <select id="f-material" data-filter="material">
+          <option value="">{i18n.catalogue.filters.all}</option>
+          {materials.map(m => <option value={m}>{m}</option>)}
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="f-finish">{i18n.catalogue.filters.finish}</label>
+        <select id="f-finish" data-filter="finish">
+          <option value="">{i18n.catalogue.filters.all}</option>
+          {finishes.map(f => <option value={f}>{f}</option>)}
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="f-thickness">{i18n.catalogue.filters.thickness}</label>
+        <select id="f-thickness" data-filter="thickness">
+          <option value="">{i18n.catalogue.filters.all}</option>
+          {thicknesses.map(t => <option value={t}>{t} cm</option>)}
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="f-status">{i18n.catalogue.filters.status}</label>
+        <select id="f-status" data-filter="status">
+          <option value="">{i18n.catalogue.filters.all}</option>
+          {statuses.map(s => <option value={s}>{s}</option>)}
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="f-sort">{i18n.catalogue.sortBy}</label>
+        <select id="f-sort" data-filter="sort">
+          <option value="newest">{i18n.catalogue.sortOptions.newest}</option>
+          <option value="largest">{i18n.catalogue.sortOptions.largest}</option>
+          <option value="material">{i18n.catalogue.sortOptions.material}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="catalogue-meta">
+      <div id="results-count" data-template={`${i18n.catalogue.results.showing} {n} ${i18n.catalogue.results.of} ${slabs.length} ${i18n.catalogue.results.slabs}`}></div>
+      <button class="btn-link" id="clear-filters">{i18n.catalogue.filters.clear}</button>
+    </div>
+
+    <div class="slab-grid" id="slab-grid">
+      {slabs.length === 0 && <div class="empty">{i18n.catalogue.results.none}</div>}
+      {slabs.map(slab => {
+        const fullPhoto = slab.photos.full[0];
+        const photoSrc = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp` : '';
+        const photoSrcLarge = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '';
+        const isSold = slab.status.en === 'sold';
+        const isReserved = slab.status.en === 'reserved';
+        return (
+          <article class="slab-card"
+            data-material={slab.material_en}
+            data-finish={slab.finish.en}
+            data-thickness={slab.thickness_cm}
+            data-status={slab.status.en}
+            data-area={slab.area_sqm}
+            data-date={slab.date_received}>
+            <a href={`/en/slabs/${slab.slab_id}`}>
+              <div class="slab-card__photo" data-status={slab.status.en}>
+                {photoSrc && (
+                  <img src={photoSrc}
+                    srcset={`${photoSrc} 400w, ${photoSrcLarge} 1200w`}
+                    sizes="(max-width: 600px) 90vw, 280px"
+                    alt={slab.material_en}
+                    loading="lazy" />
+                )}
+                {isSold && <span class="slab-card__badge slab-card__badge--sold">{i18n.slab.sold}</span>}
+                {isReserved && <span class="slab-card__badge slab-card__badge--reserved">{i18n.slab.reserved}</span>}
+              </div>
+              <div class="slab-card__body">
+                <div class="slab-card__material">{slab.material_en}</div>
+                <div class="slab-card__meta">
+                  {slab.length_cm} × {slab.width_cm} × {slab.thickness_cm} cm · {slab.area_sqm.toFixed(2)} m²
+                </div>
+                <div class="slab-card__meta">{slab.finish.en}</div>
+                <div class="slab-card__id">{slab.slab_id}</div>
+              </div>
+            </a>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+
+  <script>
+    const grid = document.getElementById('slab-grid');
+    const cards = Array.from(grid.querySelectorAll('.slab-card'));
+    const countEl = document.getElementById('results-count');
+    const countTpl = countEl.dataset.template;
+    const filters = document.querySelectorAll('[data-filter]');
+    const clearBtn = document.getElementById('clear-filters');
+
+    function applyFilters() {
+      const material  = document.getElementById('f-material').value;
+      const finish    = document.getElementById('f-finish').value;
+      const thickness = document.getElementById('f-thickness').value;
+      const status    = document.getElementById('f-status').value;
+      const sort      = document.getElementById('f-sort').value;
+
+      let visible = cards.filter(c => {
+        if (material && c.dataset.material !== material) return false;
+        if (finish && c.dataset.finish !== finish) return false;
+        if (thickness && c.dataset.thickness !== thickness) return false;
+        if (status && c.dataset.status !== status) return false;
+        return true;
+      });
+      visible.sort((a, b) => {
+        if (sort === 'largest') return parseFloat(b.dataset.area) - parseFloat(a.dataset.area);
+        if (sort === 'material') return a.dataset.material.localeCompare(b.dataset.material);
+        return (b.dataset.date || '').localeCompare(a.dataset.date || '');
+      });
+      cards.forEach(c => c.style.display = 'none');
+      visible.forEach(c => { c.style.display = ''; grid.appendChild(c); });
+      countEl.textContent = countTpl.replace('{n}', visible.length);
+    }
+
+    filters.forEach(f => f.addEventListener('change', applyFilters));
+    clearBtn.addEventListener('click', () => {
+      filters.forEach(f => { f.value = f.options[0].value; });
+      applyFilters();
+    });
+    applyFilters();
+  </script>
+</Base>

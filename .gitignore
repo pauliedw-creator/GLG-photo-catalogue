@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.DS_Store
+.env
+.env.local
+
+# Generated data and processed images (committed via Action, not by hand)
+src/data/slabs.json
+public/photos/
+
+# Credentials — should never be in the repo regardless
+*-service-account*.json
+service-account*.json
+gcp-key*.json

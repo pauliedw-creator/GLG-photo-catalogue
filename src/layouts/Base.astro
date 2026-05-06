@@ -1,0 +1,92 @@
+---
+import '../styles/global.css';
+import { t } from '../i18n.js';
+
+const {
+  title,
+  description = 'Golden Leaf Granit — bezpośredni importer i hurtowy dostawca płyt granitowych dla zakładów kamieniarskich.',
+  ogImage = '/assets/glg-og-default.png',
+  lang = 'pl',
+  canonicalPath = ''
+} = Astro.props;
+
+const i18n = t(lang);
+const fullTitle = title ? `${title} — ${i18n.siteName}` : `${i18n.siteName} — ${i18n.tagline}`;
+const url = `https://katalog.goldenleafgranit.pl${canonicalPath}`;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `https://katalog.goldenleafgranit.pl${ogImage}`;
+const currentPath = Astro.url.pathname;
+---
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="theme-color" content="#0f1115" />
+
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+
+  <link rel="canonical" href={url} />
+  <link rel="icon" type="image/svg+xml" href="/assets/glg-leaf-mono.svg" />
+  <link rel="apple-touch-icon" href="/assets/glg-icon-180.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+
+  <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:url" content={url} />
+  <meta property="og:site_name" content={i18n.siteName} />
+  <meta property="og:locale" content={lang === 'pl' ? 'pl_PL' : 'en_GB'} />
+
+  <!-- Twitter (uses same OG fallback) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageUrl} />
+
+  <!-- Preconnect for fonts (optional, only if we end up using web fonts) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href={`/${lang === 'pl' ? '' : 'en/'}`} class="site-header__brand">
+        <img src="/assets/glg-leaf.svg" alt="" />
+        <div class="site-header__brand-text">
+          <strong>GOLDEN LEAF GRANIT</strong>
+          <span>{i18n.tagline}</span>
+        </div>
+      </a>
+
+      <nav class="site-header__nav" aria-label="Main">
+        <a href={lang === 'pl' ? '/' : '/en/'} class={(currentPath === '/' || currentPath === '/en/') ? 'active' : ''}>{i18n.nav.catalogue}</a>
+        <a href={lang === 'pl' ? '/kontakt' : '/en/contact'} class={currentPath.includes('kontakt') || currentPath.includes('contact') ? 'active' : ''}>{i18n.nav.contact}</a>
+        <span class="lang-switch" aria-label="Language">
+          <a href="/" class={lang === 'pl' ? 'active' : ''}>PL</a>
+          <a href="/en/" class={lang === 'en' ? 'active' : ''}>EN</a>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__inner">
+        <div>{i18n.footer.copyright}</div>
+        <div>
+          <a href="tel:+48000000000">+48 000 000 000</a>
+          &nbsp;·&nbsp;
+          <a href="mailto:biuro@goldenleafgranit.pl">biuro@goldenleafgranit.pl</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

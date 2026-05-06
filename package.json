@@ -1,0 +1,21 @@
+{
+  "name": "glg-photo-catalogue",
+  "version": "0.1.0",
+  "description": "Golden Leaf Granit slab photo catalogue",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "fetch-data": "node scripts/fetch-data.js",
+    "build": "astro build",
+    "build:full": "node scripts/fetch-data.js && astro build",
+    "dev": "astro dev",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.16.0"
+  },
+  "devDependencies": {
+    "googleapis": "^144.0.0",
+    "sharp": "^0.33.5"
+  }
+}

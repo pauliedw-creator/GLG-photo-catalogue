@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+import { t } from '../../i18n.js';
+import slabsData from '../../data/slabs.json';
+
+export async function getStaticPaths() {
+  const slabs = slabsData.slabs || [];
+  return slabs.map(slab => ({
+    params: { slug: slab.slab_id },
+    props: { slab }
+  }));
+}
+
+const lang = 'pl';
+const i18n = t(lang);
+const { slab } = Astro.props;
+
+// Build gallery list (full first, then details, edges, wet)
+const gallery = [
+  ...slab.photos.full.map(p => ({ key: p, alt: `${slab.material_pl} — pełna płyta` })),
+  ...slab.photos.detail.map(p => ({ key: p, alt: `${slab.material_pl} — detal` })),
+  ...slab.photos.edge.map(p => ({ key: p, alt: `${slab.material_pl} — krawędź` })),
+  ...slab.photos.wet.map(p => ({ key: p, alt: `${slab.material_pl} — mokra` }))
+];
+
+const ogImage = `/photos/${slab.slab_id}/${slab.photos.full[0]}-1200.webp`;
+const description = `${slab.material_pl} · ${slab.length_cm}×${slab.width_cm}×${slab.thickness_cm} cm · ${slab.area_sqm.toFixed(2)} m² · ${slab.finish.pl}`;
+
+const isSold = slab.status.pl === 'sprzedany';
+const isReserved = slab.status.pl === 'zarezerwowany';
+const enquiryUrl = `/kontakt?slab=${slab.slab_id}`;
+const phone = '+48000000000';
+const phoneDisplay = '+48 000 000 000';
+const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`https://katalog.goldenleafgranit.pl/plyty/${slab.slab_id}`)}`;
+---
+<Base title={`${slab.material_pl} (${slab.slab_id})`}
+       description={description}
+       ogImage={ogImage}
+       canonicalPath={`/plyty/${slab.slab_id}`}
+       lang={lang}>
+  <div class="container">
+    <a href="/" class="back-link">← {i18n.slab.back}</a>
+
+    <div class="slab-detail">
+      <div class="slab-gallery">
+        <div class="slab-gallery__main">
+          <img id="main-photo"
+               src={`/photos/${slab.slab_id}/${gallery[0].key}-1200.webp`}
+               alt={gallery[0].alt}
+               loading="eager" />
+        </div>
+        {gallery.length > 1 && (
+          <div class="slab-gallery__thumbs">
+            {gallery.map((g, i) => (
+              <button type="button" class={`slab-gallery__thumb ${i === 0 ? 'active' : ''}`}
+                      data-src={`/photos/${slab.slab_id}/${g.key}-1200.webp`}
+                      data-alt={g.alt}>
+                <img src={`/photos/${slab.slab_id}/${g.key}-400.webp`} alt="" loading="lazy" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="slab-info">
+        <h1>{slab.material_pl}</h1>
+        <div class="slab-info__id">{slab.slab_id}</div>
+
+        {(isSold || isReserved) && (
+          <div style="margin-top: 1rem;">
+            <span class={`slab-card__badge ${isSold ? 'slab-card__badge--sold' : 'slab-card__badge--reserved'}`}
+                  style="position: static; display: inline-block;">
+              {isSold ? i18n.slab.sold : i18n.slab.reserved}
+            </span>
+          </div>
+        )}
+
+        <dl class="slab-specs">
+          <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.dimensions}</span><span class="slab-specs__value">{slab.length_cm} × {slab.width_cm} cm</span></div>
+          <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.thickness}</span><span class="slab-specs__value">{slab.thickness_cm} cm</span></div>
+          <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.area}</span><span class="slab-specs__value">{slab.area_sqm.toFixed(2)} m²</span></div>
+          <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.finish}</span><span class="slab-specs__value">{slab.finish.pl}</span></div>
+          <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.edge}</span><span class="slab-specs__value">{slab.edge.pl}</span></div>
+          <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.origin}</span><span class="slab-specs__value">{slab.origin_pl}</span></div>
+          <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.status}</span><span class="slab-specs__value">{slab.status.pl}</span></div>
+          {slab.date_received && <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.received}</span><span class="slab-specs__value">{slab.date_received}</span></div>}
+        </dl>
+
+        {slab.notes_pl && <div class="notes-block">{slab.notes_pl}</div>}
+
+        <div class="slab-actions">
+          {!isSold && (
+            <>
+              <a href={`tel:${phone}`} class="btn btn--primary btn--full">📞 {i18n.slab.callUs} — {phoneDisplay}</a>
+              <a href={enquiryUrl} class="btn btn--secondary btn--full">✉️ {i18n.slab.enquire}</a>
+            </>
+          )}
+          <a href={whatsappUrl} target="_blank" rel="noopener" class="btn btn--secondary btn--full">{i18n.slab.shareWhatsApp}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const main = document.getElementById('main-photo');
+    const thumbs = document.querySelectorAll('.slab-gallery__thumb');
+    thumbs.forEach(t => {
+      t.addEventListener('click', () => {
+        main.src = t.dataset.src;
+        main.alt = t.dataset.alt;
+        thumbs.forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+      });
+    });
+  </script>
+</Base>
