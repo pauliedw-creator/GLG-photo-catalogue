@@ -248,11 +248,11 @@ async function main() {
       skippedNoFolder++;
     }
 
-    // Hard rule: must have a full shot to be published
-    if (photos.full.length === 0) {
-      skippedNoFull++;
-      continue;
-    }
+// Soft rule: track slabs missing full-face photo, but include them anyway with a flag
+if (photos.full.length === 0) {
+  skippedNoFull++;
+  // Include the slab with a 'missing_photo' flag so the site can show a placeholder
+}
 
     processedSlabs.push({
       ...slab,
