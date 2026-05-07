@@ -206,6 +206,7 @@ async function processImage(buffer, slabId, shotType, index, watermarkBuf) {
         .composite([{ input: wmResized, top, left }])
         .webp({ quality: 82 })
         .toFile(path.join(outDir, `${baseName}-${size}.webp`));
+      console.log(`  Watermark applied: ${baseName}-${size}.webp (img:${outMeta.width}x${outMeta.height} wm:${wmMeta.width}x${wmMeta.height} pos:${left},${top})`);
     } else {
       await pipeline
         .webp({ quality: 82 })
