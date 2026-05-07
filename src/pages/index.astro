@@ -94,8 +94,8 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
         const fullPhoto = slab.photos.full[0];
         const photoSrc = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp` : '/assets/slab-placeholder.svg';
         const photoSrcLarge = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '/assets/slab-placeholder.svg';
-        const isSold = slab.status.pl === 'sprzedany';
-        const isReserved = slab.status.pl === 'zarezerwowany';
+        const isSold = slab.status.pl === 'Sprzedany';
+        const isReserved = slab.status.pl === 'Zarezerwowany';
         return (
           <article class="slab-card"
             data-material={slab.material_pl}
@@ -107,7 +107,7 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
             data-area={slab.area_sqm}
             data-date={slab.date_received}>
             <a href={`/plyty/${slab.slab_id}`}>
-              <div class="slab-card__photo" data-status={slab.status.pl}>
+              <div class="slab-card__photo" data-status={slab.status.pl?.toLowerCase()}>
                 <img src={photoSrc}
                   srcset={fullPhoto ? `${photoSrc} 400w, ${photoSrcLarge} 1200w` : undefined}
                   sizes="(max-width: 600px) 90vw, 280px"

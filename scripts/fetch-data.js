@@ -46,20 +46,20 @@ const drive = google.drive({ version: 'v3', auth });
 
 // ---------- enums (Polish source → English presentation) ----------
 const FINISH_MAP = {
-  'polerowany':    { pl: 'polerowany',     en: 'polished' },
-  'szczotkowany': { pl: 'szczotkowany',   en: 'brushed' },
-  'płomieniowany':{ pl: 'płomieniowany', en: 'flamed' },
-  'piaskowany':    { pl: 'piaskowany',     en: 'sandblasted' },
-  'surowy':         { pl: 'surowy',           en: 'raw' }
+  'polerowany':     { pl: 'Polerowany',     en: 'Polished' },
+  'szczotkowany':  { pl: 'Szczotkowany',   en: 'Brushed' },
+  'płomieniowany': { pl: 'Płomieniowany', en: 'Flamed' },
+  'piaskowany':     { pl: 'Piaskowany',     en: 'Sandblasted' },
+  'surowy':          { pl: 'Surowy',          en: 'Raw' }
 };
 const EDGE_MAP = {
-  'cięty':      { pl: 'cięty',     en: 'cut' },
-  'naturalny': { pl: 'naturalny', en: 'natural' }
+  'cięty':      { pl: 'Cięty',     en: 'Cut' },
+  'naturalny': { pl: 'Naturalny', en: 'Natural' }
 };
 const STATUS_MAP = {
-  'dostępny':         { pl: 'dostępny',         en: 'available' },
-  'zarezerwowany':  { pl: 'zarezerwowany',  en: 'reserved' },
-  'sprzedany':         { pl: 'sprzedany',         en: 'sold' }
+  'dostępny':        { pl: 'Dostępny',        en: 'Available' },
+  'zarezerwowany': { pl: 'Zarezerwowany', en: 'Reserved' },
+  'sprzedany':        { pl: 'Sprzedany',        en: 'Sold' }
 };
 const ORIGIN_MAP = {
   'Indie': 'India', 'Chiny': 'China', 'Brazylia': 'Brazil',
@@ -67,20 +67,20 @@ const ORIGIN_MAP = {
   'Hiszpania': 'Spain', 'Inne': 'Other'
 };
 const STONE_TYPE_MAP = {
-  'granit':   { pl: 'granit',   en: 'granite' },
-  'kwarcyt': { pl: 'kwarcyt', en: 'quartzite' }
+  'granit':   { pl: 'Granit',   en: 'Granite' },
+  'kwarcyt': { pl: 'Kwarcyt', en: 'Quartzite' }
 };
 const COLOUR_MAP = {
-  'czarny':         { pl: 'czarny',         en: 'black' },
-  'biały':          { pl: 'biały',          en: 'white' },
-  'szary':          { pl: 'szary',          en: 'grey' },
-  'czerwony':      { pl: 'czerwony',      en: 'red' },
-  'brązowy':       { pl: 'brązowy',       en: 'brown' },
-  'beżowy':        { pl: 'beżowy',        en: 'beige' },
-  'zielony':       { pl: 'zielony',       en: 'green' },
-  'niebieski':     { pl: 'niebieski',     en: 'blue' },
-  'złoty':          { pl: 'złoty',          en: 'gold' },
-  'wielobarwny':  { pl: 'wielobarwny',  en: 'multicoloured' }
+  'czarny':        { pl: 'Czarny',        en: 'Black' },
+  'biały':          { pl: 'Biały',          en: 'White' },
+  'szary':          { pl: 'Szary',          en: 'Grey' },
+  'czerwony':      { pl: 'Czerwony',      en: 'Red' },
+  'brązowy':       { pl: 'Brązowy',       en: 'Brown' },
+  'beżowy':        { pl: 'Beżowy',        en: 'Beige' },
+  'zielony':       { pl: 'Zielony',       en: 'Green' },
+  'niebieski':     { pl: 'Niebieski',     en: 'Blue' },
+  'złoty':          { pl: 'Złoty',          en: 'Gold' },
+  'wielobarwny':  { pl: 'Wielobarwny',  en: 'Multicoloured' }
 };
 
 // ---------- helpers ----------

@@ -29,8 +29,8 @@ const mainPhotoAlt = hasPhotos ? gallery[0].alt : `${slab.material_pl} — brak 
 const ogImage = hasPhotos ? `/photos/${slab.slab_id}/${gallery[0].key}-1200.webp` : '/assets/glg-og-default.png';
 const description = `${slab.material_pl} · ${slab.length_cm}×${slab.width_cm}×${slab.thickness_cm} cm · ${slab.area_sqm.toFixed(2)} m² · ${slab.finish.pl}`;
 
-const isSold = slab.status.pl === 'sprzedany';
-const isReserved = slab.status.pl === 'zarezerwowany';
+const isSold = slab.status.pl === 'Sprzedany';
+const isReserved = slab.status.pl === 'Zarezerwowany';
 const enquiryUrl = `/kontakt?slab=${slab.slab_id}`;
 const phone = '+48000000000';
 const phoneDisplay = '+48 000 000 000';
