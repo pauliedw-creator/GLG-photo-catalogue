@@ -181,8 +181,8 @@ async function processImage(buffer, slabId, shotType, index, watermarkBuf) {
   for (const size of SIZES) {
     let pipeline = sharp(buffer).rotate().resize({ width: size, withoutEnlargement: true });
 
-    // Apply watermark only to full shot, only at large sizes (1200+)
-    if (shotType === 'full' && size >= 1200) {
+    // Apply watermark to all shot types at large sizes (1200+)
+    if (size >= 1200) {
       // Materialise the resized output first so we know actual dimensions
       const outBuf = await pipeline.toBuffer();
       const outMeta = await sharp(outBuf).metadata();
