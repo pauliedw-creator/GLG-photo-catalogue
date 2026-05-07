@@ -183,18 +183,24 @@ async function processImage(buffer, slabId, shotType, index, watermarkBuf) {
 
     // Apply watermark only to full shot, only at large sizes (1200+)
     if (shotType === 'full' && size >= 1200) {
-      // Watermark width should be ~60% of image width
-      const wmWidth = Math.round(size * 0.6);
+      // Materialise the resized output first so we know actual dimensions
+      const outBuf = await pipeline.toBuffer();
+      const outMeta = await sharp(outBuf).metadata();
+
+      // Watermark width = 55% of actual output width, never wider than output
+      const wmWidth = Math.min(
+        Math.round(outMeta.width * 0.55),
+        outMeta.width - 20
+      );
       const wmResized = await sharp(watermarkBuf, { density: 300 })
         .resize({ width: wmWidth })
         .toBuffer();
       const wmMeta = await sharp(wmResized).metadata();
 
-      // Need to know output dimensions to position bottom-right
-      const outBuf = await pipeline.toBuffer();
-      const outMeta = await sharp(outBuf).metadata();
-      const top = outMeta.height - wmMeta.height - Math.round(size * 0.025);
-      const left = outMeta.width - wmMeta.width - Math.round(size * 0.025);
+      // Clamp position so watermark never overflows the image
+      const margin = Math.round(outMeta.width * 0.02);
+      const top  = Math.max(0, outMeta.height - wmMeta.height - margin);
+      const left = Math.max(0, outMeta.width  - wmMeta.width  - margin);
 
       await sharp(outBuf)
         .composite([{ input: wmResized, top, left }])
