@@ -21,13 +21,13 @@ const currentPath = Astro.url.pathname;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-  <meta name="theme-color" content="#0f1115" />
+  <meta name="theme-color" content="#222426" />
 
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
 
   <link rel="canonical" href={url} />
-  <link rel="icon" type="image/svg+xml" href="/assets/glg-leaf-mono.svg" />
+  <link rel="icon" type="image/png" href="/assets/glg-logo-leaf-200.png" />
   <link rel="apple-touch-icon" href="/assets/glg-icon-180.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
 
@@ -54,10 +54,10 @@ const currentPath = Astro.url.pathname;
   <header class="site-header">
     <div class="site-header__inner">
       <a href={`/${lang === 'pl' ? '' : 'en/'}`} class="site-header__brand">
-        <img src="/assets/glg-leaf.svg" alt="" />
+        <img src="/assets/glg-logo-leaf-200.png" alt="Golden Leaf Granit Sp. z o.o" />
         <div class="site-header__brand-text">
           <strong>GOLDEN LEAF GRANIT</strong>
-          <span>{i18n.tagline}</span>
+          <span>Sp. z o.o · {i18n.tagline}</span>
         </div>
       </a>
 
