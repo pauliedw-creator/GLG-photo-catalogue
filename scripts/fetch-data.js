@@ -66,13 +66,29 @@ const ORIGIN_MAP = {
   'RPA': 'South Africa', 'Norwegia': 'Norway', 'Włochy': 'Italy',
   'Hiszpania': 'Spain', 'Inne': 'Other'
 };
+const STONE_TYPE_MAP = {
+  'granit':   { pl: 'granit',   en: 'granite' },
+  'kwarcyt': { pl: 'kwarcyt', en: 'quartzite' }
+};
+const COLOUR_MAP = {
+  'czarny':         { pl: 'czarny',         en: 'black' },
+  'biały':          { pl: 'biały',          en: 'white' },
+  'szary':          { pl: 'szary',          en: 'grey' },
+  'czerwony':      { pl: 'czerwony',      en: 'red' },
+  'brązowy':       { pl: 'brązowy',       en: 'brown' },
+  'beżowy':        { pl: 'beżowy',        en: 'beige' },
+  'zielony':       { pl: 'zielony',       en: 'green' },
+  'niebieski':     { pl: 'niebieski',     en: 'blue' },
+  'złoty':          { pl: 'złoty',          en: 'gold' },
+  'wielobarwny':  { pl: 'wielobarwny',  en: 'multicoloured' }
+};
 
 // ---------- helpers ----------
 async function fetchSheet() {
   console.log('Fetching sheet rows...');
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: 'Slabs!A1:P1000'
+    range: 'Slabs!A1:R1000'
   });
   const rows = res.data.values || [];
   if (rows.length < 2) {
@@ -94,6 +110,8 @@ function normaliseRow(r) {
     slab_id: String(r.slab_id).trim(),
     material_pl: r.material_name_pl || '',
     material_en: r.material_name_en || r.material_name_pl || '',
+    stone_type: STONE_TYPE_MAP[r.stone_type] || (r.stone_type ? { pl: r.stone_type, en: r.stone_type } : null),
+    colour: COLOUR_MAP[r.colour] || (r.colour ? { pl: r.colour, en: r.colour } : null),
     length_cm: Number(r.length_cm) || 0,
     width_cm: Number(r.width_cm) || 0,
     thickness_cm: Number(r.thickness_cm) || 0,

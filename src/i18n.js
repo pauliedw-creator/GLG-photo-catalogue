@@ -1,150 +1,92 @@
-// Centralised UI strings for PL / EN
-// Slab data itself is bilingual via the data pipeline; this is for site chrome.
-export const strings = {
-  pl: {
-    siteName: 'Golden Leaf Granit',
-    tagline: 'Katalog płyt',
-    nav: {
-      catalogue: 'Katalog',
-      contact: 'Kontakt'
-    },
-    catalogue: {
-      title: 'Katalog płyt',
-      subtitle: 'Aktualne stany magazynowe — ',
-      filters: {
-        material: 'Materiał',
-        finish: 'Wykończenie',
-        thickness: 'Grubość',
-        status: 'Status',
-        all: 'Wszystkie',
-        clear: 'Wyczyść filtry'
-      },
-      results: {
-        showing: 'Pokazano',
-        of: 'z',
-        slabs: 'płyt',
-        none: 'Brak płyt spełniających kryteria.'
-      },
-      sortBy: 'Sortuj wg',
-      sortOptions: {
-        newest: 'Najnowsze',
-        largest: 'Największe',
-        material: 'Materiał (A–Z)'
-      }
-    },
-    slab: {
-      dimensions: 'Wymiary',
-      area: 'Powierzchnia',
-      thickness: 'Grubość',
-      finish: 'Wykończenie',
-      edge: 'Krawędź',
-      origin: 'Pochodzenie',
-      status: 'Status',
-      received: 'Data przyjęcia',
-      enquire: 'Zapytaj o tę płytę',
-      callUs: 'Zadzwoń teraz',
-      back: 'Wróć do katalogu',
-      shareWhatsApp: 'Udostępnij na WhatsApp',
-      sold: 'SPRZEDANY',
-      reserved: 'ZAREZERWOWANY'
-    },
-    contact: {
-      title: 'Kontakt',
-      lead: 'Jesteśmy bezpośrednim importerem i hurtowym dostawcą płyt granitowych dla zakładów kamieniarskich. Skontaktuj się w sprawie zapytania ofertowego lub wizyty w magazynie w Nowej Dębowej Woli.',
-      phone: 'Telefon',
-      email: 'E-mail',
-      address: 'Adres',
-      hours: 'Godziny otwarcia',
-      hoursValue: 'Pn–Pt 8:00–17:00, Sb na umówienie',
-      formTitle: 'Wyślij zapytanie',
-      form: {
-        company: 'Firma',
-        name: 'Imię i nazwisko',
-        phone: 'Telefon',
-        email: 'E-mail (opcjonalnie)',
-        slabIds: 'Płyty (numery)',
-        message: 'Wiadomość',
-        submit: 'Wyślij zapytanie',
-        required: 'wymagane'
-      }
-    },
-    footer: {
-      copyright: '© Golden Leaf Granit Sp. z o.o.'
-    }
-  },
-  en: {
-    siteName: 'Golden Leaf Granit',
-    tagline: 'Slab catalogue',
-    nav: {
-      catalogue: 'Catalogue',
-      contact: 'Contact'
-    },
-    catalogue: {
-      title: 'Slab catalogue',
-      subtitle: 'Current stock — ',
-      filters: {
-        material: 'Material',
-        finish: 'Finish',
-        thickness: 'Thickness',
-        status: 'Status',
-        all: 'All',
-        clear: 'Clear filters'
-      },
-      results: {
-        showing: 'Showing',
-        of: 'of',
-        slabs: 'slabs',
-        none: 'No slabs match these filters.'
-      },
-      sortBy: 'Sort by',
-      sortOptions: {
-        newest: 'Newest',
-        largest: 'Largest',
-        material: 'Material (A–Z)'
-      }
-    },
-    slab: {
-      dimensions: 'Dimensions',
-      area: 'Area',
-      thickness: 'Thickness',
-      finish: 'Finish',
-      edge: 'Edge',
-      origin: 'Origin',
-      status: 'Status',
-      received: 'Received',
-      enquire: 'Enquire about this slab',
-      callUs: 'Call us now',
-      back: 'Back to catalogue',
-      shareWhatsApp: 'Share on WhatsApp',
-      sold: 'SOLD',
-      reserved: 'RESERVED'
-    },
-    contact: {
-      title: 'Contact',
-      lead: 'We are a direct importer and wholesale supplier of granite slabs to monument workshops and stonemasons. Get in touch for a quote or to arrange a warehouse visit in Nowa Dębowa Wola.',
-      phone: 'Phone',
-      email: 'Email',
-      address: 'Address',
-      hours: 'Opening hours',
-      hoursValue: 'Mon–Fri 8:00–17:00, Sat by appointment',
-      formTitle: 'Send an enquiry',
-      form: {
-        company: 'Company',
-        name: 'Your name',
-        phone: 'Phone',
-        email: 'Email (optional)',
-        slabIds: 'Slab IDs',
-        message: 'Message',
-        submit: 'Send enquiry',
-        required: 'required'
-      }
-    },
-    footer: {
-      copyright: '© Golden Leaf Granit Sp. z o.o.'
-    }
-  }
-};
+---
+import '../styles/global.css';
+import { t } from '../i18n.js';
 
-export function t(lang) {
-  return strings[lang] || strings.pl;
-}
+const {
+  title,
+  description = 'Golden Leaf Granit — bezpośredni importer i hurtowy dostawca płyt granitowych dla zakładów kamieniarskich.',
+  ogImage = '/assets/glg-og-default.png',
+  lang = 'pl',
+  canonicalPath = ''
+} = Astro.props;
+
+const i18n = t(lang);
+const fullTitle = title ? `${title} — ${i18n.siteName}` : `${i18n.siteName} — ${i18n.tagline}`;
+const url = `https://katalog.goldenleafgranit.pl${canonicalPath}`;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `https://katalog.goldenleafgranit.pl${ogImage}`;
+const currentPath = Astro.url.pathname;
+---
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="theme-color" content="#222426" />
+
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+
+  <link rel="canonical" href={url} />
+  <link rel="icon" type="image/png" href="/assets/glg-logo-leaf-200.png" />
+  <link rel="apple-touch-icon" href="/assets/glg-icon-180.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+
+  <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:url" content={url} />
+  <meta property="og:site_name" content={i18n.siteName} />
+  <meta property="og:locale" content={lang === 'pl' ? 'pl_PL' : 'en_GB'} />
+
+  <!-- Twitter (uses same OG fallback) -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageUrl} />
+
+  <!-- Preconnect for fonts (optional, only if we end up using web fonts) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href={`/${lang === 'pl' ? '' : 'en/'}`} class="site-header__brand">
+        <img src="/assets/glg-logo-leaf-200.png" alt="Golden Leaf Granit Sp. z o.o" />
+        <div class="site-header__brand-text">
+          <strong>GOLDEN LEAF GRANIT</strong>
+          <span>Sp. z o.o · {i18n.tagline}</span>
+        </div>
+      </a>
+
+      <nav class="site-header__nav" aria-label="Main">
+        <a href={lang === 'pl' ? '/' : '/en/'} class={(currentPath === '/' || currentPath === '/en/') ? 'active' : ''}>{i18n.nav.catalogue}</a>
+        <a href={lang === 'pl' ? '/kontakt' : '/en/contact'} class={currentPath.includes('kontakt') || currentPath.includes('contact') ? 'active' : ''}>{i18n.nav.contact}</a>
+        <span class="lang-switch" aria-label="Language">
+          <a href="/" class={lang === 'pl' ? 'active' : ''}>PL</a>
+          <a href="/en/" class={lang === 'en' ? 'active' : ''}>EN</a>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__inner">
+        <div>{i18n.footer.copyright}</div>
+        <div>
+          <a href="tel:+48000000000">+48 000 000 000</a>
+          &nbsp;·&nbsp;
+          <a href="mailto:biuro@goldenleafgranit.pl">biuro@goldenleafgranit.pl</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

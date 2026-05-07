@@ -82,6 +82,8 @@ const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`https://katalog.g
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.dimensions}</span><span class="slab-specs__value">{slab.length_cm} × {slab.width_cm} cm</span></div>
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.thickness}</span><span class="slab-specs__value">{slab.thickness_cm} cm</span></div>
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.area}</span><span class="slab-specs__value">{slab.area_sqm.toFixed(2)} m²</span></div>
+          {slab.stone_type && <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.stoneType}</span><span class="slab-specs__value">{slab.stone_type.pl}</span></div>}
+          {slab.colour && <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.colour}</span><span class="slab-specs__value">{slab.colour.pl}</span></div>}
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.finish}</span><span class="slab-specs__value">{slab.finish.pl}</span></div>
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.edge}</span><span class="slab-specs__value">{slab.edge.pl}</span></div>
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.origin}</span><span class="slab-specs__value">{slab.origin_pl}</span></div>

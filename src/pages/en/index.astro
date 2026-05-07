@@ -10,6 +10,8 @@ const generatedAt = slabsData.generated_at || new Date().toISOString();
 const generatedDate = new Date(generatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
 const materials = [...new Set(slabs.map(s => s.material_en).filter(Boolean))].sort();
+const stoneTypes = [...new Set(slabs.map(s => s.stone_type?.en).filter(Boolean))].sort();
+const colours = [...new Set(slabs.map(s => s.colour?.en).filter(Boolean))].sort();
 const finishes = [...new Set(slabs.map(s => s.finish.en).filter(Boolean))].sort();
 const thicknesses = [...new Set(slabs.map(s => s.thickness_cm).filter(Boolean))].sort((a, b) => a - b);
 const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
@@ -29,6 +31,24 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
           {materials.map(m => <option value={m}>{m}</option>)}
         </select>
       </div>
+      {stoneTypes.length > 1 && (
+        <div class="filter-group">
+          <label for="f-stoneType">{i18n.catalogue.filters.stoneType}</label>
+          <select id="f-stoneType" data-filter="stoneType">
+            <option value="">{i18n.catalogue.filters.all}</option>
+            {stoneTypes.map(s => <option value={s}>{s}</option>)}
+          </select>
+        </div>
+      )}
+      {colours.length > 0 && (
+        <div class="filter-group">
+          <label for="f-colour">{i18n.catalogue.filters.colour}</label>
+          <select id="f-colour" data-filter="colour">
+            <option value="">{i18n.catalogue.filters.all}</option>
+            {colours.map(c => <option value={c}>{c}</option>)}
+          </select>
+        </div>
+      )}
       <div class="filter-group">
         <label for="f-finish">{i18n.catalogue.filters.finish}</label>
         <select id="f-finish" data-filter="finish">
@@ -76,6 +96,8 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
         return (
           <article class="slab-card"
             data-material={slab.material_en}
+            data-stoneType={slab.stone_type?.en || ''}
+            data-colour={slab.colour?.en || ''}
             data-finish={slab.finish.en}
             data-thickness={slab.thickness_cm}
             data-status={slab.status.en}
@@ -114,18 +136,24 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
     const filters = document.querySelectorAll('[data-filter]');
     const clearBtn = document.getElementById('clear-filters');
 
+    function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
     function applyFilters() {
-      const material  = document.getElementById('f-material').value;
-      const finish    = document.getElementById('f-finish').value;
-      const thickness = document.getElementById('f-thickness').value;
-      const status    = document.getElementById('f-status').value;
-      const sort      = document.getElementById('f-sort').value;
+      const material  = getVal('f-material');
+      const stoneType = getVal('f-stoneType');
+      const colour    = getVal('f-colour');
+      const finish    = getVal('f-finish');
+      const thickness = getVal('f-thickness');
+      const status    = getVal('f-status');
+      const sort      = getVal('f-sort');
 
       let visible = cards.filter(c => {
-        if (material && c.dataset.material !== material) return false;
-        if (finish && c.dataset.finish !== finish) return false;
+        if (material  && c.dataset.material  !== material)  return false;
+        if (stoneType && c.dataset.stonetype !== stoneType) return false;
+        if (colour    && c.dataset.colour    !== colour)    return false;
+        if (finish    && c.dataset.finish    !== finish)    return false;
         if (thickness && c.dataset.thickness !== thickness) return false;
-        if (status && c.dataset.status !== status) return false;
+        if (status    && c.dataset.status    !== status)    return false;
         return true;
       });
       visible.sort((a, b) => {
