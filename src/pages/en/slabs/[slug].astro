@@ -25,10 +25,10 @@ const mainPhotoAlt = hasPhotos ? gallery[0].alt : `${slab.material_en} — no ph
 const ogImage = hasPhotos ? `/photos/${slab.slab_id}/${gallery[0].key}-1200.webp` : '/assets/glg-og-default.png';
 const description = `${slab.material_en} · ${slab.length_cm}×${slab.width_cm}×${slab.thickness_cm} cm · ${slab.area_sqm.toFixed(2)} m² · ${slab.finish.en}`;
 
-const isSold = slab.status.en === 'sold';
-const isReserved = slab.status.en === 'reserved';
-const phone = '+48000000000';
-const phoneDisplay = '+48 000 000 000';
+const isSold = slab.status.en === 'Sold';
+const isReserved = slab.status.en === 'Reserved';
+const phone = '+48782501122';
+const phoneDisplay = '+48 782-50-11-22';
 const enquiryUrl = `/en/contact?slab=${slab.slab_id}`;
 const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`https://katalog.goldenleafgranit.pl/en/slabs/${slab.slab_id}`)}`;
 ---
