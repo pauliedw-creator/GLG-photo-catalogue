@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   # Every 30 minutes
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/5 * * * *'
   # On any push to main (so changes to site code redeploy too)
   push:
     branches: [main]
