@@ -88,7 +88,7 @@ async function fetchSheet() {
   console.log('Fetching sheet rows...');
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: 'Slabs!A1:R1000'
+    range: 'Slabs!A1:R3000'
   });
   const rows = res.data.values || [];
   if (rows.length < 2) {
