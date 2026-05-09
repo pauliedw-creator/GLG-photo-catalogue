@@ -9,9 +9,9 @@ const i18n = t(lang);
 const PHONE = '+48782501122';
 const PHONE_DISPLAY = '+48 782-50-11-22';
 const EMAIL = 'golden.leaf.granites@outlook.com';
-const ADDRESS = 'Nowa Dębowa Wola, Świętokrzyskie';
-const WEB3FORMS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
-const HCAPTCHA_SITEKEY = 'YOUR_HCAPTCHA_SITEKEY';
+const ADDRESS = 'Nowa DÄ™bowa Wola, ÅšwiÄ™tokrzyskie';
+const WEB3FORMS_KEY = 'dba5f8a3-5109-421f-9e98-04be168224cb';
+const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
 ---
 <Base title={i18n.contact.title} lang={lang} canonicalPath="/kontakt">
   <div class="container">
@@ -48,7 +48,7 @@ const HCAPTCHA_SITEKEY = 'YOUR_HCAPTCHA_SITEKEY';
           <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
           <input type="hidden" name="subject" value="Nowe zapytanie z katalogu GLG" />
           <input type="hidden" name="from_name" value="Katalog GLG" />
-          <!-- Honeypot field — bots fill it, humans never see it -->
+          <!-- Honeypot field â€” bots fill it, humans never see it -->
           <input type="text" name="website" class="form-honeypot" tabindex="-1" autocomplete="off" />
 
           <div class="form-row">
@@ -100,7 +100,7 @@ const HCAPTCHA_SITEKEY = 'YOUR_HCAPTCHA_SITEKEY';
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       // Honeypot check
-      if (form.website.value) return; // bot — silently drop
+      if (form.website.value) return; // bot â€” silently drop
 
       const data = new FormData(form);
 
@@ -112,14 +112,14 @@ const HCAPTCHA_SITEKEY = 'YOUR_HCAPTCHA_SITEKEY';
         const result = await res.json();
         if (result.success) {
           status.className = 'form-status success';
-          status.textContent = 'Dziękujemy. Skontaktujemy się wkrótce.';
+          status.textContent = 'DziÄ™kujemy. Skontaktujemy siÄ™ wkrÃ³tce.';
           form.reset();
         } else {
           throw new Error(result.message || 'submit failed');
         }
       } catch (err) {
         status.className = 'form-status error';
-        status.textContent = 'Wystąpił błąd. Prosimy zadzwonić bezpośrednio: ' + '+48 782-50-11-22';
+        status.textContent = 'WystÄ…piÅ‚ bÅ‚Ä…d. Prosimy zadzwoniÄ‡ bezpoÅ›rednio: ' + '+48 782-50-11-22';
       }
     });
   </script>
