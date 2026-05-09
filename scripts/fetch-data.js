@@ -206,7 +206,6 @@ async function processImage(buffer, slabId, shotType, index, watermarkBuf) {
         .composite([{ input: wmResized, top, left }])
         .webp({ quality: 82 })
         .toFile(path.join(outDir, `${baseName}-${size}.webp`));
-      console.log(`  Watermark applied: ${baseName}-${size}.webp (img:${outMeta.width}x${outMeta.height} wm:${wmMeta.width}x${wmMeta.height} pos:${left},${top})`);
     } else {
       await pipeline
         .webp({ quality: 82 })
@@ -233,14 +232,16 @@ async function main() {
   const slabs = rows.map(normaliseRow);
 
   // Fetch all slab folders once for lookup speed
+  // Group by name to handle duplicate folders (race condition from capture app)
   console.log('Listing slab folders in Drive...');
   const allFolders = await listChildFolders(DRIVE_ROOT);
-  const folderByName = new Map(
-    allFolders
-      .filter(f => !f.name.startsWith('_')) // skip _bulk_inbox, _rejected
-      .map(f => [f.name, f])
-  );
-  console.log(`  ${folderByName.size} slab folders found`);
+  const foldersByName = new Map();
+  for (const f of allFolders) {
+    if (f.name.startsWith('_')) continue; // skip _bulk_inbox, _rejected
+    if (!foldersByName.has(f.name)) foldersByName.set(f.name, []);
+    foldersByName.get(f.name).push(f);
+  }
+  console.log(`  ${foldersByName.size} slab folders found`);
 
   const processedSlabs = [];
   let processedCount = 0, skippedNoFolder = 0, skippedNoFull = 0, skippedUnpublished = 0;
@@ -251,14 +252,17 @@ async function main() {
       continue;
     }
 
-    const folder = folderByName.get(slab.slab_id);
+    const folders = foldersByName.get(slab.slab_id) || [];
     const photos = { full: [], detail: [], edge: [], wet: [] };
 
-    if (folder) {
-      const files = await listFilesInFolder(folder.id);
-      for (const file of files) {
-        const type = classifyPhoto(file.name);
-        if (type) photos[type].push(file);
+    if (folders.length > 0) {
+      // Merge files from all folders with this name (handles duplicate folder race condition)
+      for (const folder of folders) {
+        const files = await listFilesInFolder(folder.id);
+        for (const file of files) {
+          const type = classifyPhoto(file.name);
+          if (type) photos[type].push(file);
+        }
       }
 
       // Process each photo
