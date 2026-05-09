@@ -10,8 +10,7 @@ const PHONE_DISPLAY = '+48 782-50-11-22';
 const EMAIL = 'pdwphen@hotmail.com';
 const ADDRESS = 'Nowa Dębowa Wola, Świętokrzyskie';
 const WEB3FORMS_KEY = 'dba5f8a3-5109-421f-9e98-04be168224cb';
-const HCAPTCHA_SITEKEY = '37b8e8d8-1aa2-43a4-8ada-60a448827668';
----i
+---
 <Base title={i18n.contact.title} lang={lang} canonicalPath="/en/contact">
   <div class="container">
     <div class="page-title-block">
@@ -44,8 +43,6 @@ const HCAPTCHA_SITEKEY = '37b8e8d8-1aa2-43a4-8ada-60a448827668';
           <div class="form-row"><label for="slabIds">{i18n.contact.form.slabIds}</label><input type="text" id="slabIds" name="slabIds" placeholder="GLG-251105-01..." /></div>
           <div class="form-row"><label for="message">{i18n.contact.form.message}</label><textarea id="message" name="message"></textarea></div>
 
-          <div class="h-captcha" data-sitekey={HCAPTCHA_SITEKEY}></div>
-
           <button type="submit" class="btn btn--primary btn--full" style="margin-top: 1rem;">{i18n.contact.form.submit}</button>
           <div class="form-status" id="form-status" role="status"></div>
         </form>
@@ -53,7 +50,6 @@ const HCAPTCHA_SITEKEY = '37b8e8d8-1aa2-43a4-8ada-60a448827668';
     </div>
   </div>
 
-  <script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
   <script>
     const params = new URLSearchParams(window.location.search);
     const slab = params.get('slab');
@@ -64,15 +60,8 @@ const HCAPTCHA_SITEKEY = '37b8e8d8-1aa2-43a4-8ada-60a448827668';
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (form.website.value) return;
-
-      const data = new FormData(form);
-      const hcaptchaToken = document.querySelector('[name="h-captcha-response"]')?.value
-        || document.querySelector('textarea[name="h-captcha-response"]')?.value
-        || '';
-      if (hcaptchaToken) data.set('h-captcha-response', hcaptchaToken);
-
       try {
-        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
+        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(form) });
         const result = await res.json();
         if (result.success) {
           status.className = 'form-status success';
@@ -86,3 +75,4 @@ const HCAPTCHA_SITEKEY = '37b8e8d8-1aa2-43a4-8ada-60a448827668';
     });
   </script>
 </Base>
+
