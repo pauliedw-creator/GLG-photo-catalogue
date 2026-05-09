@@ -4,79 +4,79 @@ export const strings = {
   pl: {
     siteName: 'Golden Leaf Granit',
     siteNameFull: 'Golden Leaf Granit Sp. z o.o',
-    tagline: 'Katalog pÅ‚yt',
+    tagline: 'Katalog płyt',
     nav: {
       catalogue: 'Katalog',
       contact: 'Kontakt'
     },
     catalogue: {
-      title: 'Katalog pÅ‚yt',
-      subtitle: 'Aktualne stany magazynowe â€” ',
+      title: 'Katalog płyt',
+      subtitle: 'Aktualne stany magazynowe — ',
       filters: {
         search: 'Szukaj',
-        searchPlaceholder: 'Nazwa materiaÅ‚u, ID pÅ‚ytyâ€¦',
-        material: 'MateriaÅ‚',
+        searchPlaceholder: 'Nazwa materiału, ID płyty…',
+        material: 'Materiał',
         stoneType: 'Rodzaj kamienia',
         colour: 'Kolor',
-        finish: 'WykoÅ„czenie',
-        thickness: 'GruboÅ›Ä‡',
+        finish: 'Wykończenie',
+        thickness: 'Grubość',
         status: 'Status',
         all: 'Wszystkie',
-        clear: 'WyczyÅ›Ä‡ filtry'
+        clear: 'Wyczyść filtry'
       },
       results: {
         showing: 'Pokazano',
         of: 'z',
-        slabs: 'pÅ‚yt',
-        none: 'Brak pÅ‚yt speÅ‚niajÄ…cych kryteria.'
+        slabs: 'płyt',
+        none: 'Brak płyt spełniających kryteria.'
       },
       sortBy: 'Sortuj wg',
       sortOptions: {
         newest: 'Najnowsze',
-        largest: 'NajwiÄ™ksze',
-        material: 'MateriaÅ‚ (Aâ€“Z)'
+        largest: 'Największe',
+        material: 'Materiał (A–Z)'
       }
     },
     slab: {
       dimensions: 'Wymiary',
       area: 'Powierzchnia',
-      thickness: 'GruboÅ›Ä‡',
+      thickness: 'Grubość',
       stoneType: 'Rodzaj kamienia',
       colour: 'Kolor',
-      finish: 'WykoÅ„czenie',
-      edge: 'KrawÄ™dÅº',
+      finish: 'Wykończenie',
+      edge: 'Krawędź',
       origin: 'Pochodzenie',
       status: 'Status',
-      received: 'Data przyjÄ™cia',
-      enquire: 'Zapytaj o tÄ™ pÅ‚ytÄ™',
-      callUs: 'ZadzwoÅ„ teraz',
-      back: 'WrÃ³Ä‡ do katalogu',
-      shareWhatsApp: 'UdostÄ™pnij na WhatsApp',
+      received: 'Data przyjęcia',
+      enquire: 'Zapytaj o tę płytę',
+      callUs: 'Zadzwoń teraz',
+      back: 'Wróć do katalogu',
+      shareWhatsApp: 'Udostępnij na WhatsApp',
       sold: 'SPRZEDANY',
       reserved: 'ZAREZERWOWANY'
     },
     contact: {
       title: 'Kontakt',
-      lead: 'JesteÅ›my bezpoÅ›rednim importerem i hurtowym dostawcÄ… pÅ‚yt granitowych dla zakÅ‚adÃ³w kamieniarskich. Skontaktuj siÄ™ w sprawie zapytania ofertowego lub wizyty w magazynie w Nowej DÄ™bowej Woli.',
+      lead: 'Jesteśmy bezpośrednim importerem i hurtowym dostawcą płyt granitowych dla zakładów kamieniarskich. Skontaktuj się w sprawie zapytania ofertowego lub wizyty w magazynie w Nowej Dębowej Woli.',
       phone: 'Telefon',
       email: 'E-mail',
       address: 'Adres',
       hours: 'Godziny otwarcia',
-      hoursValue: 'Pnâ€“Pt 8:00â€“17:00, Sb na umÃ³wienie',
-      formTitle: 'WyÅ›lij zapytanie',
+      hoursValue: 'Pn–Pt 8:00–17:00, Sb na umówienie',
+      formTitle: 'Wyślij zapytanie',
       form: {
         company: 'Firma',
-        name: 'ImiÄ™ i nazwisko',
+        name: 'Imię i nazwisko',
         phone: 'Telefon',
         email: 'E-mail (opcjonalnie)',
-        slabIds: 'PÅ‚yty (numery)',
-        message: 'WiadomoÅ›Ä‡',
-        submit: 'WyÅ›lij zapytanie',
+        slabIds: 'Płyty (numery)',
+        message: 'Wiadomość',
+        submit: 'Wyślij zapytanie',
         required: 'wymagane'
       }
     },
     footer: {
-      copyright: 'Â© Golden Leaf Granit Sp. z o.o.'
+      copyright: '© Golden Leaf Granit Sp. z o.o.'
     }
   },
   en: {
@@ -89,10 +89,10 @@ export const strings = {
     },
     catalogue: {
       title: 'Slab Catalogue',
-      subtitle: 'Current Stock â€” ',
+      subtitle: 'Current Stock — ',
       filters: {
         search: 'Search',
-        searchPlaceholder: 'Material name, slab IDâ€¦',
+        searchPlaceholder: 'Material name, slab ID…',
         material: 'Material',
         stoneType: 'Stone Type',
         colour: 'Colour',
@@ -112,7 +112,7 @@ export const strings = {
       sortOptions: {
         newest: 'Newest',
         largest: 'Largest',
-        material: 'Material (Aâ€“Z)'
+        material: 'Material (A–Z)'
       }
     },
     slab: {
@@ -135,12 +135,12 @@ export const strings = {
     },
     contact: {
       title: 'Contact',
-      lead: 'We are a direct importer and wholesale supplier of granite slabs to monument workshops and stonemasons. Get in touch for a quote or to arrange a warehouse visit in Nowa DÄ™bowa Wola.',
+      lead: 'We are a direct importer and wholesale supplier of granite slabs to monument workshops and stonemasons. Get in touch for a quote or to arrange a warehouse visit in Nowa Dębowa Wola.',
       phone: 'Phone',
       email: 'Email',
       address: 'Address',
       hours: 'Opening Hours',
-      hoursValue: 'Monâ€“Fri 8:00â€“17:00, Sat by Appointment',
+      hoursValue: 'Mon–Fri 8:00–17:00, Sat by Appointment',
       formTitle: 'Send an Enquiry',
       form: {
         company: 'Company',
@@ -154,7 +154,7 @@ export const strings = {
       }
     },
     footer: {
-      copyright: 'Â© Golden Leaf Granit Sp. z o.o.'
+      copyright: '© Golden Leaf Granit Sp. z o.o.'
     }
   }
 };
