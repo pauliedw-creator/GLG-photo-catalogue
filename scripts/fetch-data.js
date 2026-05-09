@@ -214,15 +214,6 @@ async function processImage(buffer, slabId, shotType, index, watermarkBuf) {
   }
 }
 
-async function findSlabFolder(parentId, slabId) {
-  // Match folder name exactly to slab_id
-  const res = await drive.files.list({
-    q: `'${parentId}' in parents and mimeType='application/vnd.google-apps.folder' and name='${slabId}' and trashed=false`,
-    fields: 'files(id, name)'
-  });
-  return (res.data.files || [])[0] || null;
-}
-
 async function main() {
   console.log('=== GLG Catalogue Build ===');
 
