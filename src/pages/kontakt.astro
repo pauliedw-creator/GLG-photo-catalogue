@@ -5,13 +5,11 @@ import { t } from '../i18n.js';
 const lang = 'pl';
 const i18n = t(lang);
 
-// TODO: replace these placeholders with real values before launch
 const PHONE = '+48782501122';
 const PHONE_DISPLAY = '+48 782-50-11-22';
 const EMAIL = 'golden.leaf.granites@outlook.com';
 const ADDRESS = 'Nowa Dębowa Wola, Świętokrzyskie';
 const WEB3FORMS_KEY = 'dba5f8a3-5109-421f-9e98-04be168224cb';
-const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
 ---
 <Base title={i18n.contact.title} lang={lang} canonicalPath="/kontakt">
   <div class="container">
@@ -48,7 +46,6 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
           <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
           <input type="hidden" name="subject" value="Nowe zapytanie z katalogu GLG" />
           <input type="hidden" name="from_name" value="Katalog GLG" />
-          <!-- Honeypot field — bots fill it, humans never see it -->
           <input type="text" name="website" class="form-honeypot" tabindex="-1" autocomplete="off" />
 
           <div class="form-row">
@@ -76,8 +73,6 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
             <textarea id="message" name="message"></textarea>
           </div>
 
-          <div class="h-captcha" data-sitekey={HCAPTCHA_SITEKEY}></div>
-
           <button type="submit" class="btn btn--primary btn--full" style="margin-top: 1rem;">
             {i18n.contact.form.submit}
           </button>
@@ -87,9 +82,7 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
     </div>
   </div>
 
-  <script src="https://js.hcaptcha.com/1/api.js" async defer is:inline></script>
   <script>
-    // Pre-fill slab field from query string ?slab=GLG-...
     const params = new URLSearchParams(window.location.search);
     const slab = params.get('slab');
     if (slab) document.getElementById('slabIds').value = slab;
@@ -101,18 +94,10 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
       e.preventDefault();
       if (form.website.value) return;
 
-      const data = new FormData(form);
-
-      // Explicitly grab hCaptcha token — FormData doesn't always pick it up
-      const hcaptchaToken = document.querySelector('[name="h-captcha-response"]')?.value
-        || document.querySelector('textarea[name="h-captcha-response"]')?.value
-        || '';
-      if (hcaptchaToken) data.set('h-captcha-response', hcaptchaToken);
-
       try {
         const res = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
-          body: data
+          body: new FormData(form)
         });
         const result = await res.json();
         if (result.success) {
@@ -129,3 +114,4 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
     });
   </script>
 </Base>
+
