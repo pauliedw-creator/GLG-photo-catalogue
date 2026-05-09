@@ -64,8 +64,15 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (form.website.value) return;
+
+      const data = new FormData(form);
+      const hcaptchaToken = document.querySelector('[name="h-captcha-response"]')?.value
+        || document.querySelector('textarea[name="h-captcha-response"]')?.value
+        || '';
+      if (hcaptchaToken) data.set('h-captcha-response', hcaptchaToken);
+
       try {
-        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(form) });
+        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
         const result = await res.json();
         if (result.success) {
           status.className = 'form-status success';
@@ -74,7 +81,7 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
         } else throw new Error(result.message || 'submit failed');
       } catch (err) {
         status.className = 'form-status error';
-        status.textContent = 'Something went wrong. Please call directly: +48 000 000 000';
+        status.textContent = 'Something went wrong. Please call directly: +48 782-50-11-22';
       }
     });
   </script>

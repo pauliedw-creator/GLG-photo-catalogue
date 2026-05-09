@@ -99,10 +99,15 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      // Honeypot check
-      if (form.website.value) return; // bot — silently drop
+      if (form.website.value) return;
 
       const data = new FormData(form);
+
+      // Explicitly grab hCaptcha token — FormData doesn't always pick it up
+      const hcaptchaToken = document.querySelector('[name="h-captcha-response"]')?.value
+        || document.querySelector('textarea[name="h-captcha-response"]')?.value
+        || '';
+      if (hcaptchaToken) data.set('h-captcha-response', hcaptchaToken);
 
       try {
         const res = await fetch('https://api.web3forms.com/submit', {
@@ -119,7 +124,7 @@ const HCAPTCHA_SITEKEY = 'a8ec2934-e232-4f48-a4f6-f5bc7ec61ae4';
         }
       } catch (err) {
         status.className = 'form-status error';
-        status.textContent = 'Wystąpił błąd. Prosimy zadzwonić bezpośrednio: ' + '+48 782-50-11-22';
+        status.textContent = 'Wystąpił błąd. Prosimy zadzwonić bezpośrednio: +48 782-50-11-22';
       }
     });
   </script>
