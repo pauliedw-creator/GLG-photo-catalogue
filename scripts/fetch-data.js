@@ -204,11 +204,11 @@ async function processImage(buffer, slabId, shotType, index, watermarkBuf) {
 
       await sharp(outBuf)
         .composite([{ input: wmResized, top, left }])
-        .webp({ quality: 82 })
+        .webp({ quality: 90 })
         .toFile(path.join(outDir, `${baseName}-${size}.webp`));
     } else {
       await pipeline
-        .webp({ quality: 82 })
+        .webp({ quality: 90 })
         .toFile(path.join(outDir, `${baseName}-${size}.webp`));
     }
   }
