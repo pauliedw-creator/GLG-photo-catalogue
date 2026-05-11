@@ -119,12 +119,14 @@ const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`https://katalog.g
     });
 
     // Umami: send material metadata with the page view
-    if (typeof umami !== 'undefined') {
-      umami.track(props => ({
-        ...props,
-        title: material + ' (' + slabId + ')',
-        data: { material, origin, finish, thickness }
-      }));
+    // Wait for umami to be ready (script is deferred)
+    function trackSlab() {
+      if (typeof umami !== 'undefined') {
+        umami.track('slab-view', { material, origin, finish, thickness, id: slabId });
+      } else {
+        setTimeout(trackSlab, 300);
+      }
     }
+    trackSlab();
   </script>
 </Base>
