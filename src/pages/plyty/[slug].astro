@@ -106,7 +106,7 @@ const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`https://katalog.g
     </div>
   </div>
 
-  <script>
+  <script define:vars={{ slabId: slab.slab_id, material: slab.material_pl, origin: slab.origin_pl, finish: slab.finish.pl, thickness: slab.thickness_cm }}>
     const main = document.getElementById('main-photo');
     const thumbs = document.querySelectorAll('.slab-gallery__thumb');
     thumbs.forEach(t => {
@@ -117,5 +117,14 @@ const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`https://katalog.g
         t.classList.add('active');
       });
     });
+
+    // Umami: send material metadata with the page view
+    if (typeof umami !== 'undefined') {
+      umami.track(props => ({
+        ...props,
+        title: material + ' (' + slabId + ')',
+        data: { material, origin, finish, thickness }
+      }));
+    }
   </script>
 </Base>
