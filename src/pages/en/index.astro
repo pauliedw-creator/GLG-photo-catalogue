@@ -21,6 +21,18 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
     <div class="page-title-block">
       <h1>{i18n.catalogue.title}</h1>
       <p class="lede">{i18n.catalogue.subtitle}{slabs.length} {i18n.catalogue.results.slabs} · {generatedDate}</p>
+      <div class="status-counts">
+        {(() => {
+          const avail    = slabs.filter(s => s.status.en === 'Available').length;
+          const reserved = slabs.filter(s => s.status.en === 'Reserved').length;
+          const sold     = slabs.filter(s => s.status.en === 'Sold').length;
+          return <>
+            <span class="status-count status-count--avail">✓ {avail} available</span>
+            {reserved > 0 && <span class="status-count status-count--reserved">⏳ {reserved} reserved</span>}
+            {sold > 0 && <span class="status-count status-count--sold">✗ {sold} sold</span>}
+          </>;
+        })()}
+      </div>
     </div>
 
     <div class="catalogue-toolbar" role="region" aria-label="Filters">
@@ -120,8 +132,13 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
               </div>
               <div class="slab-card__body">
                 <div class="slab-card__material">{slab.material_en}</div>
-                <div class="slab-card__meta">
-                  {slab.length_cm} × {slab.width_cm} × {slab.thickness_cm} cm · {slab.area_sqm.toFixed(2)} m²
+                <div class="slab-card__dims">
+                  <span class="slab-card__dim">{slab.length_cm}<small>cm</small></span>
+                  <span class="slab-card__dim-sep">×</span>
+                  <span class="slab-card__dim">{slab.width_cm}<small>cm</small></span>
+                  <span class="slab-card__dim-sep">×</span>
+                  <span class="slab-card__dim">{slab.thickness_cm}<small>cm</small></span>
+                  <span class="slab-card__area">{slab.area_sqm.toFixed(2)} m²</span>
                 </div>
                 <div class="slab-card__meta">{slab.finish.en}</div>
                 <div class="slab-card__id">{slab.slab_id}</div>
