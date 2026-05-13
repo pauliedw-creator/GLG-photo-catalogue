@@ -5,34 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analytics — Golden Leaf Granit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Cinzel:wght@600&display=swap" rel="stylesheet">
   <style>
+    /* ── Design tokens (matches katalog global.css) ── */
     :root {
-      --bg:       #1a1c20;
-      --bg2:      #22252b;
-      --bg3:      #2a2e36;
-      --border:   #333840;
-      --text:     #c8c4bc;
-      --dim:      #616670;
-      --gold:     #c9a86c;
-      --gold-dim: #7a6438;
-      --green:    #5a9e6f;
+      --gold:           #C5A050;
+      --gold-soft:      #d4b76a;
+      --gold-dark:      #8a6c2a;
+      --chrome-bg:      #222426;
+      --chrome-bg-elev: #2a2c30;
+      --chrome-text:    #ECECF1;
+      --chrome-text-muted: #b4b8c4;
+      --chrome-border:  #3a3d44;
+      --bg:             #f1ece2;
+      --bg-elev:        #e8e2d4;
+      --bg-card:        #ffffff;
+      --border:         #d8d2c4;
+      --border-strong:  #bcb39e;
+      --text:           #1f2024;
+      --text-muted:     #5a5a60;
+      --text-faint:     #888690;
+      --radius:         8px;
+      --radius-lg:      14px;
+      --shadow-sm:      0 1px 2px rgba(40,30,10,0.05);
+      --shadow-md:      0 4px 14px rgba(40,30,10,0.08);
+      --green:          #3d8a4e;
     }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Gate */
+    /* ── Gate ── */
     .gate {
       position: fixed; inset: 0;
-      background: var(--bg);
+      background: var(--chrome-bg);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -43,79 +59,98 @@
       flex-direction: column;
       align-items: center;
       gap: 16px;
-      width: 280px;
+      width: 300px;
+      padding: 40px 32px;
+      background: var(--chrome-bg-elev);
+      border: 1px solid var(--chrome-border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
     .gate-logo {
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      color: var(--dim);
-      letter-spacing: 0.1em;
+      font-family: "Cinzel", Georgia, serif;
+      font-size: 13px;
+      color: var(--gold);
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin-bottom: 8px;
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.8;
+      margin-bottom: 4px;
+    }
+    .gate-sub {
+      font-size: 11px;
+      color: var(--chrome-text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: -10px;
+      margin-bottom: 4px;
     }
     .gate-input {
       width: 100%;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      color: var(--text);
+      background: var(--chrome-bg);
+      border: 1px solid var(--chrome-border);
+      color: var(--chrome-text);
       padding: 10px 14px;
-      font-family: 'DM Mono', monospace;
       font-size: 14px;
-      border-radius: 3px;
+      border-radius: var(--radius);
       outline: none;
       text-align: center;
+      letter-spacing: 0.05em;
     }
-    .gate-input:focus { border-color: var(--gold-dim); }
+    .gate-input:focus { border-color: var(--gold-dark); }
     .gate-btn {
       width: 100%;
       background: var(--gold);
-      color: #16181b;
+      color: #1a1a1a;
       border: none;
-      padding: 10px;
-      font-family: 'DM Sans', sans-serif;
+      padding: 11px;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: var(--radius);
+      letter-spacing: 0.04em;
+      transition: background 0.15s;
     }
+    .gate-btn:hover { background: var(--gold-soft); }
     .gate-error {
       font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: #a05050;
+      color: #e08080;
       min-height: 14px;
     }
 
-    /* Header */
+    /* ── Header ── */
     header {
-      border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
+      background: var(--chrome-bg);
+      border-bottom: 1px solid var(--chrome-border);
+      padding: 12px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--bg2);
       flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
     header a {
-      color: var(--dim);
+      color: var(--chrome-text-muted);
       text-decoration: none;
       font-size: 12px;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
+      transition: color 0.15s;
     }
     header a:hover { color: var(--gold); }
     .header-title {
-      font-family: 'DM Mono', monospace;
+      font-family: "Cinzel", Georgia, serif;
       font-size: 12px;
-      color: var(--dim);
+      color: var(--gold);
+      letter-spacing: 0.1em;
     }
 
-    /* Setup */
+    /* ── Setup bar ── */
     .setup {
-      padding: 16px 24px;
+      padding: 14px 24px;
       border-bottom: 1px solid var(--border);
-      background: var(--bg2);
+      background: var(--bg-elev);
       display: flex;
       gap: 12px;
       align-items: flex-end;
@@ -123,42 +158,49 @@
       flex-shrink: 0;
     }
     .field { display: flex; flex-direction: column; gap: 5px; }
-    label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--dim); }
+    label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
     select {
-      background: var(--bg3);
-      border: 1px solid var(--border);
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
       color: var(--text);
       padding: 7px 11px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      border-radius: 3px;
+      font-size: 13px;
+      border-radius: var(--radius);
       outline: none;
     }
-    .btn {
+    select:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+    .btn-load {
+      background: var(--gold);
+      color: #1a1a1a;
       border: none;
-      padding: 8px 20px;
-      font-family: 'DM Sans', sans-serif;
+      padding: 8px 22px;
       font-size: 13px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: var(--radius);
+      transition: background 0.15s;
     }
-    .btn-gold { background: var(--gold); color: #16181b; }
-    .btn-gold:disabled { opacity: 0.4; cursor: default; }
-    .btn-red  { background: #8b3a3a; color: #f0c0c0; }
+    .btn-load:hover { background: var(--gold-soft); }
+    .btn-load:disabled { opacity: 0.4; cursor: default; }
 
-    /* Status */
+    /* ── Status bar ── */
     .status-bar {
       padding: 7px 24px;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--dim);
+      font-size: 12px;
+      color: var(--text-muted);
       border-bottom: 1px solid var(--border);
       min-height: 30px;
       display: flex;
       align-items: center;
       gap: 8px;
       flex-shrink: 0;
+      background: var(--bg);
     }
     .spinner {
       width: 11px; height: 11px;
@@ -166,102 +208,211 @@
       border-top-color: var(--gold);
       border-radius: 50%;
       animation: spin 0.65s linear infinite;
+      flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Debug */
-    #debug-panel {
-      display: none;
-      padding: 14px 24px;
-      background: #0d0f11;
-      border-bottom: 1px solid var(--border);
-      max-height: 260px;
-      overflow-y: auto;
-      flex-shrink: 0;
-    }
-    #debug-panel pre {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: #8fbf8f;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    /* Stats */
+    /* ── Stats bar ── */
     .stats-bar {
       display: none;
       padding: 14px 24px;
       gap: 36px;
       border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
       flex-shrink: 0;
+      flex-wrap: wrap;
     }
     .stats-bar.visible { display: flex; }
-    .stat-val { font-family: 'DM Mono', monospace; font-size: 22px; color: var(--gold); line-height: 1; }
-    .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dim); }
+    .stat { display: flex; flex-direction: column; gap: 2px; }
+    .stat-val {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gold-dark);
+      line-height: 1;
+      font-family: "Cinzel", Georgia, serif;
+    }
+    .stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-faint);
+    }
 
-    /* Main */
-    .main { display: grid; grid-template-columns: 1fr 320px; flex: 1; min-height: 0; }
+    /* ── Main grid ── */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      flex: 1;
+      min-height: 0;
+    }
+    @media (max-width: 800px) {
+      .main { grid-template-columns: 1fr; }
+    }
 
-    /* Tabs */
-    .tabs-panel { border-right: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0; }
-    .tab-nav { display: flex; border-bottom: 1px solid var(--border); overflow-x: auto; flex-shrink: 0; scrollbar-width: none; }
+    /* ── Tabs panel ── */
+    .tabs-panel {
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .tab-nav {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      flex-shrink: 0;
+      background: var(--bg-elev);
+      scrollbar-width: none;
+    }
     .tab-nav::-webkit-scrollbar { display: none; }
     .tab-btn {
-      padding: 10px 15px;
+      padding: 10px 14px;
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.07em;
       background: none;
       border: none;
       border-bottom: 2px solid transparent;
-      color: var(--dim);
+      color: var(--text-muted);
       cursor: pointer;
       white-space: nowrap;
-      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
       margin-bottom: -1px;
+      transition: color 0.15s;
     }
     .tab-btn:hover:not(:disabled) { color: var(--text); }
-    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-    .tab-btn:disabled { opacity: 0.28; cursor: not-allowed; }
-    .tab-content { flex: 1; overflow-y: auto; padding: 18px 20px; }
+    .tab-btn.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
+    .tab-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .tab-content { flex: 1; overflow-y: auto; padding: 20px; background: var(--bg); }
 
-    /* Bars */
-    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-    .bar-label { width: 170px; font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
-    .bar-track { flex: 1; background: var(--bg3); height: 5px; border-radius: 2px; overflow: hidden; }
-    .bar-fill  { height: 100%; background: var(--gold); border-radius: 2px; }
-    .bar-count { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--dim); width: 30px; text-align: right; flex-shrink: 0; }
-
-    /* Right panel */
-    .right-panel { display: flex; flex-direction: column; min-height: 0; }
-    .lookup-panel { border-bottom: 1px solid var(--border); padding: 16px; flex-shrink: 0; }
-    .panel-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--dim); margin-bottom: 8px; }
-    .lookup-status { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--dim); margin-bottom: 7px; }
-    .lookup-status.loaded { color: var(--green); }
-    textarea {
-      width: 100%; height: 68px;
-      background: var(--bg3); border: 1px solid var(--border); color: var(--text);
-      font-family: 'DM Mono', monospace; font-size: 10px; padding: 8px;
-      border-radius: 3px; resize: none; outline: none;
+    /* ── Bars ── */
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
     }
-    .formula-hint { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--dim); margin-top: 6px; word-break: break-all; line-height: 1.5; }
-    .formula-hint strong { color: var(--text); }
+    .bar-label {
+      width: 180px;
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 0;
+    }
+    .bar-track {
+      flex: 1;
+      background: var(--bg-elev);
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 3px;
+    }
+    .bar-count {
+      font-size: 12px;
+      color: var(--text-faint);
+      width: 32px;
+      text-align: right;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
 
-    /* Recent */
+    /* ── Right panel ── */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background: var(--bg-card);
+      border-left: 1px solid var(--border);
+    }
+
+    /* ── Lookup ── */
+    .lookup-panel {
+      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      flex-shrink: 0;
+    }
+    .panel-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .lookup-status {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 7px;
+    }
+    .lookup-status.loaded { color: var(--green); font-weight: 500; }
+    textarea {
+      width: 100%;
+      height: 64px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      font-size: 10px;
+      padding: 8px;
+      border-radius: var(--radius);
+      resize: none;
+      outline: none;
+      font-family: "SF Mono", "Menlo", monospace;
+    }
+    textarea:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+    .formula-hint {
+      font-size: 9px;
+      color: var(--text-faint);
+      margin-top: 6px;
+      word-break: break-all;
+      line-height: 1.5;
+      font-family: "SF Mono", "Menlo", monospace;
+    }
+    .formula-hint strong { color: var(--text-muted); }
+
+    /* ── Recent ── */
     .recent-panel { flex: 1; overflow-y: auto; padding: 16px; }
-    .event-row { padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .event-row {
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
     .event-row:last-child { border-bottom: none; }
-    .event-slab { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--gold); }
-    .event-meta { font-size: 11px; color: var(--dim); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .event-slab {
+      font-family: "SF Mono", "Menlo", monospace;
+      font-size: 12px;
+      color: var(--gold-dark);
+      font-weight: 600;
+    }
+    .event-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-    .empty { color: var(--dim); font-size: 12px; padding: 20px 0; text-align: center; font-family: 'DM Mono', monospace; }
+    /* ── Empty ── */
+    .empty {
+      color: var(--text-faint);
+      font-size: 13px;
+      padding: 24px 0;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
 
+<!-- Password gate -->
 <div class="gate" id="gate">
   <div class="gate-box">
-    <div class="gate-logo">Golden Leaf Granit<br>Analytics</div>
+    <div class="gate-logo">Golden Leaf Granit</div>
+    <div class="gate-sub">Analytics</div>
     <input class="gate-input" id="gate-input" type="password" placeholder="Password" autocomplete="current-password">
     <div class="gate-error" id="gate-error"></div>
     <button class="gate-btn" id="gate-btn">Enter</button>
@@ -270,7 +421,7 @@
 
 <header>
   <a href="https://katalog.goldenleafgranit.pl">&#8592; katalog.goldenleafgranit.pl</a>
-  <span class="header-title">GLG / Analytics</span>
+  <span class="header-title">Analytics</span>
 </header>
 
 <div class="setup">
@@ -284,16 +435,10 @@
       <option value="0">All time</option>
     </select>
   </div>
-  <button class="btn btn-gold" id="load-btn">Load</button>
-  <button class="btn btn-red"  id="debug-btn">Debug</button>
+  <button class="btn-load" id="load-btn">Load</button>
 </div>
 
 <div class="status-bar" id="status-bar">Select a period and click Load.</div>
-
-<div id="debug-panel">
-  <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--dim);margin-bottom:8px">Raw API Response (first 5 events)</div>
-  <pre id="debug-out">Click Debug to fetch.</pre>
-</div>
 
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><div class="stat-val" id="s-views">&#8212;</div><div class="stat-label">Slab Views</div></div>
@@ -307,9 +452,9 @@
     <div class="tab-nav">
       <button class="tab-btn active" data-tab="material">Material</button>
       <button class="tab-btn" data-tab="slabId">Slab ID</button>
-      <button class="tab-btn" data-tab="thickness" data-needs-lookup disabled>Thickness</button>
-      <button class="tab-btn" data-tab="origin"    data-needs-lookup disabled>Origin</button>
-      <button class="tab-btn" data-tab="finish"    data-needs-lookup disabled>Finish</button>
+      <button class="tab-btn" data-tab="thickness">Thickness</button>
+      <button class="tab-btn" data-tab="origin"  data-needs-lookup disabled>Origin</button>
+      <button class="tab-btn" data-tab="finish"  data-needs-lookup disabled>Finish</button>
       <button class="tab-btn" data-tab="country">Country</button>
       <button class="tab-btn" data-tab="device">Device</button>
     </div>
@@ -319,7 +464,7 @@
   <div class="right-panel">
     <div class="lookup-panel">
       <div class="panel-title">Slab Lookup</div>
-      <div class="lookup-status" id="lookup-status">No lookup &#8212; Thickness / Origin / Finish disabled</div>
+      <div class="lookup-status" id="lookup-status">No lookup &#8212; Origin / Finish disabled</div>
       <textarea id="lookup-input" placeholder="Paste Sheet formula output here&#8230;"></textarea>
       <div class="formula-hint">
         <strong>Sheet formula:</strong><br>
@@ -385,10 +530,10 @@
   };
 
   function applyLookup() {
-    var n = Object.keys(slabLookup).length;
+    var n  = Object.keys(slabLookup).length;
     var el = document.getElementById('lookup-status');
-    el.textContent = n ? '\u2713 ' + n + ' slabs loaded' : 'No lookup \u2014 Thickness / Origin / Finish disabled';
-    el.className = 'lookup-status' + (n ? ' loaded' : '');
+    el.textContent = n ? '\u2713 ' + n + ' slabs loaded' : 'No lookup \u2014 Origin / Finish disabled';
+    el.className   = 'lookup-status' + (n ? ' loaded' : '');
     document.querySelectorAll('[data-needs-lookup]').forEach(function(b) {
       b.disabled = !n;
       if (!n && b.dataset.tab === activeTab) switchTab('material');
@@ -431,7 +576,7 @@
 
     btn.disabled = false;
     if (failed) return;
-    if (!allEvents.length) { setStatus('No slab-view events found.'); return; }
+    if (!allEvents.length) { setStatus('No slab-view events found in this period.'); return; }
 
     setStatus(allEvents.length + ' slab-view events &mdash; ' + page + ' page(s) fetched.');
     document.getElementById('s-views').textContent     = allEvents.length;
@@ -449,6 +594,17 @@
   function pt(e)  { return e.pageTitle || e.page_title || ''; }
   function mat(t) { var m = t.match(/^(.+?)\s*\(GLG-/); return m ? m[1].trim() : (t.split('\u2014')[0].trim() || '(unknown)'); }
   function sid(t) { var m = t.match(/\((GLG-[^)]+)\)/); return m ? m[1] : '(unknown)'; }
+
+  // Thickness: from event properties first, then lookup, then unknown
+  function getThickness(e) {
+    // Try direct event properties (Umami may include them at top level or in a data object)
+    var t = e.thickness || (e.data && e.data.thickness);
+    if (t != null && t !== '') return t + ' cm';
+    // Fall back to lookup
+    var lu = slabLookup[sid(pt(e))];
+    if (lu && lu.t != null) return lu.t + ' cm';
+    return '(unknown)';
+  }
 
   /* ── Tabs ── */
   document.querySelectorAll('.tab-btn').forEach(function(b) {
@@ -472,17 +628,17 @@
       switch(activeTab) {
         case 'material':  k = mat(pt(e)); break;
         case 'slabId':    k = id; break;
-        case 'thickness': k = lu && lu.t != null ? lu.t + ' cm' : '(unknown)'; break;
+        case 'thickness': k = getThickness(e); break;
         case 'origin':    k = lu && lu.o ? lu.o : '(unknown)'; break;
         case 'finish':    k = lu && lu.f ? lu.f : '(unknown)'; break;
-        case 'country':   k = e.country || '(unknown)'; break;
-        case 'device':    k = e.device || e.os || '(unknown)'; break;
+        case 'country':   k = e.country  || '(unknown)'; break;
+        case 'device':    k = e.device   || '(unknown)'; break;
         default:          k = '(unknown)';
       }
       counts[k] = (counts[k] || 0) + 1;
     });
     var sorted = Object.entries(counts).sort(function(a,b) { return b[1]-a[1]; });
-    var max = sorted.length ? sorted[0][1] : 1;
+    var max    = sorted.length ? sorted[0][1] : 1;
     el.innerHTML = sorted.map(function(kv) {
       return '<div class="bar-row">' +
         '<span class="bar-label" title="'+kv[0]+'">'+kv[0]+'</span>' +
@@ -493,43 +649,23 @@
 
   /* ── Recent ── */
   function renderRecent() {
-    var el = document.getElementById('recent-events');
+    var el   = document.getElementById('recent-events');
     var list = allEvents.slice().sort(function(a,b) {
       return new Date(b.createdAt||b.created_at) - new Date(a.createdAt||a.created_at);
     }).slice(0, 15);
     if (!list.length) { el.innerHTML = '<div class="empty">No events.</div>'; return; }
     el.innerHTML = list.map(function(e) {
       var raw = e.createdAt || e.created_at;
-      var t   = raw ? new Date(raw).toLocaleString('pl-PL',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+      var ts  = raw ? new Date(raw).toLocaleString('pl-PL', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
       return '<div class="event-row">' +
         '<div class="event-slab">'+sid(pt(e))+'</div>' +
-        '<div class="event-meta"><span>'+mat(pt(e))+'</span>' +
-        (t ? '<span>'+t+'</span>' : '') +
-        (e.country ? '<span>'+e.country+'</span>' : '') +
+        '<div class="event-meta">' +
+          '<span>'+mat(pt(e))+'</span>' +
+          (ts ? '<span>'+ts+'</span>' : '') +
+          (e.country ? '<span>'+e.country+'</span>' : '') +
         '</div></div>';
     }).join('');
   }
-
-  /* ── Debug ── */
-  document.getElementById('debug-btn').onclick = async function() {
-    var panel = document.getElementById('debug-panel');
-    var out   = document.getElementById('debug-out');
-    var open  = panel.style.display === 'block';
-    panel.style.display = open ? 'none' : 'block';
-    if (open) return;
-    out.textContent = 'Fetching\u2026';
-    var days    = parseInt(document.getElementById('period').value);
-    var endAt   = Date.now();
-    var startAt = days === 0 ? new Date('2024-01-01').getTime() : endAt - days * 86400000;
-    var url = 'https://api.umami.is/v1/websites/' + WEBSITE_ID + '/events?startAt='+startAt+'&endAt='+endAt+'&page=1&pageSize=5';
-    try {
-      var res  = await fetch(url, { headers: { 'Authorization': 'Bearer ' + API_KEY } });
-      var json = await res.json();
-      out.textContent = 'HTTP ' + res.status + '\nURL: ' + url + '\n\n' + JSON.stringify(json, null, 2);
-    } catch(e) {
-      out.textContent = 'Error: ' + e.message;
-    }
-  };
 
 })();
 </script>
