@@ -309,6 +309,70 @@
       flex-wrap: wrap;
     }
 
+    /* ── Password gate ── */
+    .gate {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .gate-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 280px;
+    }
+    .gate-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .gate-input {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      border-radius: 3px;
+      outline: none;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+    .gate-input:focus { border-color: var(--gold-dim); }
+    .gate-input.wrong { border-color: #a05050; animation: shake 0.3s ease; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-6px); }
+      75%      { transform: translateX(6px); }
+    }
+    .gate-btn {
+      width: 100%;
+      background: var(--gold);
+      color: #16181b;
+      border: none;
+      padding: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .gate-btn:hover { background: #d4b47a; }
+    .gate-error {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: #a05050;
+      min-height: 14px;
+    }
+
     /* ── Empty ── */
     .empty {
       color: var(--dim);
@@ -321,16 +385,22 @@
 </head>
 <body>
 
+<div class="gate" id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">Golden Leaf Granit / Analytics</div>
+    <input class="gate-input" type="password" id="gate-input" placeholder="Password"
+           onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="gate-error" id="gate-error"></div>
+    <button class="gate-btn" onclick="checkPassword()">Enter</button>
+  </div>
+</div>
+
 <header>
   <a href="https://katalog.goldenleafgranit.pl">← katalog.goldenleafgranit.pl</a>
   <span class="header-title">GLG / Analytics</span>
 </header>
 
 <div class="setup">
-  <div class="field">
-    <label for="api-key">Umami API Key</label>
-    <input type="text" id="api-key" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" autocomplete="off" spellcheck="false">
-  </div>
   <div class="field">
     <label for="period">Period</label>
     <select id="period">
@@ -342,9 +412,15 @@
     </select>
   </div>
   <button class="load-btn" id="load-btn" onclick="loadData()">Load</button>
+  <button class="load-btn" id="debug-btn" onclick="debugFetch()" style="background:var(--bg3);color:var(--text);border:1px solid var(--border)">Debug</button>
 </div>
 
-<div class="status-bar" id="status-bar">Enter API key and click Load.</div>
+<div id="debug-panel" style="display:none;padding:16px 24px;background:#0d0f11;border-bottom:1px solid var(--border);overflow-x:auto;max-height:300px;overflow-y:auto">
+  <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--dim);margin-bottom:8px">Raw API Response</div>
+  <pre id="debug-out" style="font-family:'DM Mono',monospace;font-size:11px;color:#8fbf8f;white-space:pre-wrap;word-break:break-all"></pre>
+</div>
+
+<div class="status-bar" id="status-bar">Enter API key and click Load. &nbsp;<button onclick="debugFetch()" style="background:#c9a86c;color:#16181b;border:none;padding:4px 14px;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;border-radius:3px;letter-spacing:0.03em">DEBUG</button></div>
 
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><span class="stat-val" id="s-views">—</span><span class="stat-label">Slab Views</span></div>
@@ -392,7 +468,23 @@
 
 <script>
   const WEBSITE_ID = '48d5d4fe-be26-4af5-a5c5-82be75ce9ae7';
+  const API_KEY    = 'api_mq1H9YMXCyiTTSKRiMldvbtsfdRBKdD4';
   const PAGE_SIZE  = 500;
+
+  // ── Password gate ────────────────────────────────────────────────────────────
+
+  function checkPassword() {
+    const val = document.getElementById('gate-input').value;
+    if (val === 'Niunia2013!') {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('gate-input').value = '';
+    } else {
+      const inp = document.getElementById('gate-input');
+      document.getElementById('gate-error').textContent = 'Incorrect password.';
+      inp.classList.add('wrong');
+      setTimeout(() => inp.classList.remove('wrong'), 400);
+    }
+  }
 
   let allEvents  = [];
   let slabLookup = {};
@@ -447,9 +539,6 @@
   // ── Fetch ───────────────────────────────────────────────────────────────────
 
   async function loadData() {
-    const apiKey = document.getElementById('api-key').value.trim();
-    if (!apiKey) { setStatus('Enter an API key first.'); return; }
-
     const days   = parseInt(document.getElementById('period').value);
     const endAt  = Date.now();
     const startAt = days === 0 ? new Date('2024-01-01').getTime() : endAt - days * 86400000;
@@ -468,7 +557,7 @@
       let rows;
       try {
         const res = await fetch(url, {
-          headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' }
+          headers: { Authorization: `Bearer ${API_KEY}`, Accept: 'application/json' }
         });
         if (!res.ok) {
           const body = await res.text();
@@ -553,53 +642,4 @@
         case 'thickness':  add(lu?.t != null ? `${lu.t} cm` : '(unknown)'); break;
         case 'origin':     add(lu?.o || '(unknown)'); break;
         case 'finish':     add(lu?.f || '(unknown)'); break;
-        case 'country':    add(e.country  || '(unknown)'); break;
-        case 'device':     add(e.device   || '(unknown)'); break;
-      }
-    });
-
-    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-    const max    = sorted[0]?.[1] || 1;
-
-    el.innerHTML = sorted.map(([label, count]) => `
-      <div class="bar-row">
-        <span class="bar-label" title="${label}">${label}</span>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${(count / max * 100).toFixed(1)}%"></div>
-        </div>
-        <span class="bar-count">${count}</span>
-      </div>`).join('');
-  }
-
-  // ── Recent ───────────────────────────────────────────────────────────────────
-
-  function renderRecent() {
-    const el = document.getElementById('recent-events');
-    const recent = [...allEvents]
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 15);
-
-    if (!recent.length) { el.innerHTML = '<div class="empty">No events.</div>'; return; }
-
-    el.innerHTML = recent.map(e => {
-      const sid  = slabId(e.pageTitle);
-      const mat  = material(e.pageTitle);
-      const dt   = new Date(e.createdAt);
-      const time = dt.toLocaleDateString('pl-PL') + ' ' +
-                   dt.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-      return `<div class="event-row">
-        <div class="event-slab">${sid}</div>
-        <div class="event-meta">
-          <span>${mat}</span>
-          <span>${time}</span>
-          ${e.country ? `<span>${e.country}</span>` : ''}
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  // ── Init ─────────────────────────────────────────────────────────────────────
-  initLookup();
-</script>
-</body>
-</html>
+        case 'country':    add(e.coun
