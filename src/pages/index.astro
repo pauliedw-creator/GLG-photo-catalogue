@@ -20,16 +20,16 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
   <div class="container">
     <div class="page-title-block">
       <h1>{i18n.catalogue.title}</h1>
-      <p class="lede">{i18n.catalogue.subtitle}{slabs.length} {i18n.catalogue.results.slabs} Â· {generatedDate}</p>
+      <p class="lede">{i18n.catalogue.subtitle}{slabs.length} {i18n.catalogue.results.slabs} · {generatedDate}</p>
       <div class="status-counts">
         {(() => {
-          const avail    = slabs.filter(s => s.status.pl === 'DostÄ™pny').length;
+          const avail    = slabs.filter(s => s.status.pl === 'Dostępny').length;
           const reserved = slabs.filter(s => s.status.pl === 'Zarezerwowany').length;
           const sold     = slabs.filter(s => s.status.pl === 'Sprzedany').length;
           return <>
-            <span class="status-count status-count--avail">âœ“ {avail} dostÄ™pnych</span>
-            {reserved > 0 && <span class="status-count status-count--reserved">â³ {reserved} zarezerwowanych</span>}
-            {sold > 0 && <span class="status-count status-count--sold">âœ— {sold} sprzedanych</span>}
+            <span class="status-count status-count--avail">✓ {avail} dostępnych</span>
+            {reserved > 0 && <span class="status-count status-count--reserved">⏳ {reserved} zarezerwowanych</span>}
+            {sold > 0 && <span class="status-count status-count--sold">✗ {sold} sprzedanych</span>}
           </>;
         })()}
       </div>
@@ -37,7 +37,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
 
     <div class="catalogue-toolbar" role="region" aria-label="Filters">
       <div class="filter-search">
-        <span class="filter-search__icon">ðŸ”</span>
+        <span class="filter-search__icon">🔍</span>
         <input type="search" id="f-search" placeholder={i18n.catalogue.filters.searchPlaceholder} autocomplete="off" />
       </div>
       <div class="filter-group">
@@ -153,11 +153,11 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
                 <div class="slab-card__material">{slab.material_pl}</div>
                 <div class="slab-card__dims">
                   <span class="slab-card__dim">{slab.length_cm}<small>cm</small></span>
-                  <span class="slab-card__dim-sep">Ã—</span>
+                  <span class="slab-card__dim-sep">×</span>
                   <span class="slab-card__dim">{slab.width_cm}<small>cm</small></span>
-                  <span class="slab-card__dim-sep">Ã—</span>
+                  <span class="slab-card__dim-sep">×</span>
                   <span class="slab-card__dim">{slab.thickness_cm}<small>cm</small></span>
-                  <span class="slab-card__area">{slab.area_sqm.toFixed(2)} mÂ²</span>
+                  <span class="slab-card__area">{slab.area_sqm.toFixed(2)} m²</span>
                 </div>
                 <div class="slab-card__meta">{slab.finish.pl}</div>
                 <div class="slab-card__origin">{slab.origin_pl}</div>
@@ -171,7 +171,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
   </div>
 
   <style>
-    /* â”€â”€ View toggle button â”€â”€ */
+    /* ── View toggle button ── */
     .catalogue-meta {
       justify-content: space-between;
     }
@@ -208,7 +208,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       box-shadow: var(--shadow-sm);
     }
 
-    /* â”€â”€ List view â”€â”€ */
+    /* ── List view ── */
     .slab-grid--list {
       display: flex;
       flex-direction: column;
@@ -245,7 +245,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       object-fit: cover;
       height: 100%;
     }
-    /* Hide badge in list mode â€” status shown as text */
+    /* Hide badge in list mode — status shown as text */
     .slab-grid--list .slab-card__badge { display: none; }
 
     /* Body layout in list mode */
@@ -298,11 +298,11 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
 
     /* Status colour in list mode via data-status on the card */
     .slab-grid--list .slab-card[data-status="Sprzedany"] .slab-card__id::before {
-      content: 'Sprzedany Â· ';
+      content: 'Sprzedany · ';
       color: var(--text-faint);
     }
     .slab-grid--list .slab-card[data-status="Zarezerwowany"] .slab-card__id::before {
-      content: 'Zarezerwowany Â· ';
+      content: 'Zarezerwowany · ';
       color: #8a6b1a;
     }
 
@@ -328,7 +328,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
     const btnGrid    = document.getElementById('btn-grid');
     const btnList    = document.getElementById('btn-list');
 
-    // â”€â”€ View toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── View toggle ──────────────────────────────────────────────────────────
     const PREF_KEY = 'glg_view_pref';
 
     function setView(mode) {
@@ -350,7 +350,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       if (saved === 'list') setView('list');
     } catch(e) {}
 
-    // â”€â”€ Filters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Filters ──────────────────────────────────────────────────────────────
     function getVal(id) {
       const el = document.getElementById(id);
       return el ? el.value : '';
