@@ -50,7 +50,8 @@ const FINISH_MAP = {
   'szczotkowany':  { pl: 'Szczotkowany',   en: 'Brushed' },
   'płomieniowany': { pl: 'Płomieniowany', en: 'Flamed' },
   'piaskowany':     { pl: 'Piaskowany',     en: 'Sandblasted' },
-  'surowy':          { pl: 'Surowy',          en: 'Raw' }
+  'surowy':          { pl: 'Surowy',          en: 'Raw' },
+  'żywicowany':     { pl: 'Żywicowany',     en: 'Resin-treated' }
 };
 const EDGE_MAP = {
   'cięty':      { pl: 'Cięty',     en: 'Cut' },
@@ -64,7 +65,8 @@ const STATUS_MAP = {
 const ORIGIN_MAP = {
   'Indie': 'India', 'Chiny': 'China', 'Brazylia': 'Brazil',
   'RPA': 'South Africa', 'Norwegia': 'Norway', 'Włochy': 'Italy',
-  'Hiszpania': 'Spain', 'Inne': 'Other'
+  'Hiszpania': 'Spain', 'Inne': 'Other',
+  'Angola': 'Angola', 'Szwecja': 'Sweden', 'Finlandia': 'Finland'
 };
 const STONE_TYPE_MAP = {
   'granit':   { pl: 'Granit',   en: 'Granite' },
