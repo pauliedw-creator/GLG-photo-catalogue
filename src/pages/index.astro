@@ -9,28 +9,27 @@ const slabs = slabsData.slabs || [];
 const generatedAt = slabsData.generated_at || new Date().toISOString();
 const generatedDate = new Date(generatedAt).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-// Build filter options from the data — only values actually present
-const materials = [...new Set(slabs.map(s => s.material_pl).filter(Boolean))].sort();
+const materials  = [...new Set(slabs.map(s => s.material_pl).filter(Boolean))].sort();
 const stoneTypes = [...new Set(slabs.map(s => s.stone_type?.pl).filter(Boolean))].sort();
-const colours = [...new Set(slabs.map(s => s.colour?.pl).filter(Boolean))].sort();
-const finishes = [...new Set(slabs.map(s => s.finish.pl).filter(Boolean))].sort();
+const colours    = [...new Set(slabs.map(s => s.colour?.pl).filter(Boolean))].sort();
+const finishes   = [...new Set(slabs.map(s => s.finish.pl).filter(Boolean))].sort();
 const thicknesses = [...new Set(slabs.map(s => s.thickness_cm).filter(Boolean))].sort((a, b) => a - b);
-const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
+const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
 ---
 <Base title={i18n.catalogue.title} lang={lang}>
   <div class="container">
     <div class="page-title-block">
       <h1>{i18n.catalogue.title}</h1>
-      <p class="lede">{i18n.catalogue.subtitle}{slabs.length} {i18n.catalogue.results.slabs} · {generatedDate}</p>
+      <p class="lede">{i18n.catalogue.subtitle}{slabs.length} {i18n.catalogue.results.slabs} Â· {generatedDate}</p>
       <div class="status-counts">
         {(() => {
-          const avail    = slabs.filter(s => s.status.pl === 'Dostępny').length;
+          const avail    = slabs.filter(s => s.status.pl === 'DostÄ™pny').length;
           const reserved = slabs.filter(s => s.status.pl === 'Zarezerwowany').length;
           const sold     = slabs.filter(s => s.status.pl === 'Sprzedany').length;
           return <>
-            <span class="status-count status-count--avail">✓ {avail} dostępnych</span>
-            {reserved > 0 && <span class="status-count status-count--reserved">⏳ {reserved} zarezerwowanych</span>}
-            {sold > 0 && <span class="status-count status-count--sold">✗ {sold} sprzedanych</span>}
+            <span class="status-count status-count--avail">âœ“ {avail} dostÄ™pnych</span>
+            {reserved > 0 && <span class="status-count status-count--reserved">â³ {reserved} zarezerwowanych</span>}
+            {sold > 0 && <span class="status-count status-count--sold">âœ— {sold} sprzedanych</span>}
           </>;
         })()}
       </div>
@@ -38,7 +37,7 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
 
     <div class="catalogue-toolbar" role="region" aria-label="Filters">
       <div class="filter-search">
-        <span class="filter-search__icon">🔍</span>
+        <span class="filter-search__icon">ðŸ”</span>
         <input type="search" id="f-search" placeholder={i18n.catalogue.filters.searchPlaceholder} autocomplete="off" />
       </div>
       <div class="filter-group">
@@ -99,7 +98,23 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
 
     <div class="catalogue-meta">
       <div id="results-count" data-template={`${i18n.catalogue.results.showing} {n} ${i18n.catalogue.results.of} ${slabs.length} ${i18n.catalogue.results.slabs}`}></div>
-      <button class="btn-link" id="clear-filters">{i18n.catalogue.filters.clear}</button>
+      <div class="catalogue-meta__right">
+        <button class="btn-link" id="clear-filters">{i18n.catalogue.filters.clear}</button>
+        <div class="view-toggle" aria-label="View mode">
+          <button class="view-toggle__btn active" id="btn-grid" title="Widok siatki" aria-pressed="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <rect x="0" y="0" width="7" height="7" rx="1"/><rect x="9" y="0" width="7" height="7" rx="1"/>
+              <rect x="0" y="9" width="7" height="7" rx="1"/><rect x="9" y="9" width="7" height="7" rx="1"/>
+            </svg>
+          </button>
+          <button class="view-toggle__btn" id="btn-list" title="Widok listy" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <rect x="0" y="1" width="16" height="2.5" rx="1"/><rect x="0" y="6.75" width="16" height="2.5" rx="1"/>
+              <rect x="0" y="12.5" width="16" height="2.5" rx="1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="slab-grid" id="slab-grid">
@@ -110,7 +125,7 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
         const fullPhoto = slab.photos.full[0];
         const photoSrc = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp` : '/assets/slab-placeholder.svg';
         const photoSrcLarge = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '/assets/slab-placeholder.svg';
-        const isSold = slab.status.pl === 'Sprzedany';
+        const isSold     = slab.status.pl === 'Sprzedany';
         const isReserved = slab.status.pl === 'Zarezerwowany';
         return (
           <article class="slab-card"
@@ -122,6 +137,7 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
             data-status={slab.status.pl}
             data-area={slab.area_sqm}
             data-date={slab.date_received}
+            data-origin={slab.origin_pl || ''}
             data-search={`${slab.material_pl} ${slab.material_en} ${slab.slab_id} ${slab.origin_pl} ${slab.notes_pl}`.toLowerCase()}>
             <a href={`/plyty/${slab.slab_id}`}>
               <div class="slab-card__photo" data-status={slab.status.pl?.toLowerCase()}>
@@ -130,20 +146,21 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
                   sizes="(max-width: 600px) 90vw, 280px"
                   alt={slab.material_pl}
                   loading="lazy" />
-                {isSold && <span class="slab-card__badge slab-card__badge--sold">{i18n.slab.sold}</span>}
+                {isSold     && <span class="slab-card__badge slab-card__badge--sold">{i18n.slab.sold}</span>}
                 {isReserved && <span class="slab-card__badge slab-card__badge--reserved">{i18n.slab.reserved}</span>}
               </div>
               <div class="slab-card__body">
                 <div class="slab-card__material">{slab.material_pl}</div>
                 <div class="slab-card__dims">
                   <span class="slab-card__dim">{slab.length_cm}<small>cm</small></span>
-                  <span class="slab-card__dim-sep">×</span>
+                  <span class="slab-card__dim-sep">Ã—</span>
                   <span class="slab-card__dim">{slab.width_cm}<small>cm</small></span>
-                  <span class="slab-card__dim-sep">×</span>
+                  <span class="slab-card__dim-sep">Ã—</span>
                   <span class="slab-card__dim">{slab.thickness_cm}<small>cm</small></span>
-                  <span class="slab-card__area">{slab.area_sqm.toFixed(2)} m²</span>
+                  <span class="slab-card__area">{slab.area_sqm.toFixed(2)} mÂ²</span>
                 </div>
                 <div class="slab-card__meta">{slab.finish.pl}</div>
+                <div class="slab-card__origin">{slab.origin_pl}</div>
                 <div class="slab-card__id">{slab.slab_id}</div>
               </div>
             </a>
@@ -153,15 +170,187 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
     </div>
   </div>
 
-  <script>
-    const grid = document.getElementById('slab-grid');
-    const cards = Array.from(grid.querySelectorAll('.slab-card'));
-    const countEl = document.getElementById('results-count');
-    const countTpl = countEl.dataset.template;
-    const filters = document.querySelectorAll('[data-filter]');
-    const clearBtn = document.getElementById('clear-filters');
-    const searchInput = document.getElementById('f-search');
+  <style>
+    /* â”€â”€ View toggle button â”€â”€ */
+    .catalogue-meta {
+      justify-content: space-between;
+    }
+    .catalogue-meta__right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .view-toggle {
+      display: flex;
+      gap: 2px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px;
+    }
+    .view-toggle__btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 28px;
+      background: none;
+      border: none;
+      border-radius: 4px;
+      color: var(--text-faint);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .view-toggle__btn:hover { color: var(--text-muted); }
+    .view-toggle__btn.active {
+      background: var(--bg-card);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
 
+    /* â”€â”€ List view â”€â”€ */
+    .slab-grid--list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .slab-grid--list .slab-card {
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      box-shadow: none;
+    }
+    .slab-grid--list .slab-card:last-child { border-bottom: none; }
+    .slab-grid--list .slab-card:hover { transform: none; background: var(--bg-elev); }
+
+    .slab-grid--list .slab-card a {
+      flex-direction: row;
+      align-items: center;
+      height: auto;
+    }
+
+    /* Thumbnail in list mode */
+    .slab-grid--list .slab-card__photo {
+      width: 80px;
+      min-width: 80px;
+      height: 60px;
+      aspect-ratio: unset;
+      border-radius: 0;
+      flex-shrink: 0;
+    }
+    .slab-grid--list .slab-card__photo img {
+      object-fit: cover;
+      height: 100%;
+    }
+    /* Hide badge in list mode â€” status shown as text */
+    .slab-grid--list .slab-card__badge { display: none; }
+
+    /* Body layout in list mode */
+    .slab-grid--list .slab-card__body {
+      display: grid;
+      grid-template-columns: minmax(140px, 1.5fr) minmax(160px, 1.5fr) minmax(100px, 1fr) minmax(80px, 1fr) auto;
+      align-items: center;
+      padding: 10px 16px;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .slab-grid--list .slab-card__material {
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .slab-grid--list .slab-card__dims {
+      margin: 0;
+      flex-wrap: nowrap;
+      font-size: 0.9rem;
+    }
+    .slab-grid--list .slab-card__dim { font-size: 0.9rem; }
+    .slab-grid--list .slab-card__meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* Origin: hidden in grid, visible in list */
+    .slab-card__origin { display: none; }
+    .slab-grid--list .slab-card__origin {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .slab-grid--list .slab-card__id {
+      margin-top: 0;
+      padding-top: 0;
+      font-size: 0.75rem;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Status colour in list mode via data-status on the card */
+    .slab-grid--list .slab-card[data-status="Sprzedany"] .slab-card__id::before {
+      content: 'Sprzedany Â· ';
+      color: var(--text-faint);
+    }
+    .slab-grid--list .slab-card[data-status="Zarezerwowany"] .slab-card__id::before {
+      content: 'Zarezerwowany Â· ';
+      color: #8a6b1a;
+    }
+
+    /* Responsive: collapse list columns on small screens */
+    @media (max-width: 700px) {
+      .slab-grid--list .slab-card__body {
+        grid-template-columns: 1fr 1fr;
+        gap: 4px 12px;
+      }
+      .slab-grid--list .slab-card__origin,
+      .slab-grid--list .slab-card__id { grid-column: span 2; }
+    }
+  </style>
+
+  <script>
+    const grid       = document.getElementById('slab-grid');
+    const cards      = Array.from(grid.querySelectorAll('.slab-card'));
+    const countEl    = document.getElementById('results-count');
+    const countTpl   = countEl.dataset.template;
+    const filters    = document.querySelectorAll('[data-filter]');
+    const clearBtn   = document.getElementById('clear-filters');
+    const searchInput = document.getElementById('f-search');
+    const btnGrid    = document.getElementById('btn-grid');
+    const btnList    = document.getElementById('btn-list');
+
+    // â”€â”€ View toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const PREF_KEY = 'glg_view_pref';
+
+    function setView(mode) {
+      const isList = mode === 'list';
+      grid.classList.toggle('slab-grid--list', isList);
+      btnGrid.classList.toggle('active', !isList);
+      btnList.classList.toggle('active',  isList);
+      btnGrid.setAttribute('aria-pressed', String(!isList));
+      btnList.setAttribute('aria-pressed', String(isList));
+      try { localStorage.setItem(PREF_KEY, mode); } catch(e) {}
+    }
+
+    btnGrid.addEventListener('click', () => setView('grid'));
+    btnList.addEventListener('click', () => setView('list'));
+
+    // Restore preference
+    try {
+      const saved = localStorage.getItem(PREF_KEY);
+      if (saved === 'list') setView('list');
+    } catch(e) {}
+
+    // â”€â”€ Filters â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function getVal(id) {
       const el = document.getElementById(id);
       return el ? el.value : '';
@@ -189,7 +378,7 @@ const statuses = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       });
 
       visible.sort((a, b) => {
-        if (sort === 'largest') return parseFloat(b.dataset.area) - parseFloat(a.dataset.area);
+        if (sort === 'largest')  return parseFloat(b.dataset.area) - parseFloat(a.dataset.area);
         if (sort === 'material') return a.dataset.material.localeCompare(b.dataset.material);
         return (b.dataset.date || '').localeCompare(a.dataset.date || '');
       });
