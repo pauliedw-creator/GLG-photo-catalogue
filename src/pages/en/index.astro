@@ -303,7 +303,7 @@ const statuses    = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
     /* ── Mobile: material + dims + id only ── */
     @media (max-width: 700px) {
       .slab-grid--list .slab-card__body {
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr;
         gap: 2px 10px;
         padding: 8px 12px 8px 10px;
       }
@@ -311,8 +311,8 @@ const statuses    = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
         grid-column: 1 / -1;
         font-size: 0.88rem;
       }
-      .slab-grid--list .slab-card__dims { grid-column: 1; }
-      .slab-grid--list .slab-card__id   { grid-column: 2; align-self: end; text-align: right; }
+      .slab-grid--list .slab-card__dims { grid-column: 1 / -1; }
+      .slab-grid--list .slab-card__id,
       .slab-grid--list .slab-card__meta,
       .slab-grid--list .slab-card__origin,
       .slab-grid--list .slab-card__status { display: none; }
