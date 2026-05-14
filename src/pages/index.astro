@@ -9,12 +9,12 @@ const slabs = slabsData.slabs || [];
 const generatedAt = slabsData.generated_at || new Date().toISOString();
 const generatedDate = new Date(generatedAt).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-const materials  = [...new Set(slabs.map(s => s.material_pl).filter(Boolean))].sort();
-const stoneTypes = [...new Set(slabs.map(s => s.stone_type?.pl).filter(Boolean))].sort();
-const colours    = [...new Set(slabs.map(s => s.colour?.pl).filter(Boolean))].sort();
-const finishes   = [...new Set(slabs.map(s => s.finish.pl).filter(Boolean))].sort();
+const materials   = [...new Set(slabs.map(s => s.material_pl).filter(Boolean))].sort();
+const stoneTypes  = [...new Set(slabs.map(s => s.stone_type?.pl).filter(Boolean))].sort();
+const colours     = [...new Set(slabs.map(s => s.colour?.pl).filter(Boolean))].sort();
+const finishes    = [...new Set(slabs.map(s => s.finish.pl).filter(Boolean))].sort();
 const thicknesses = [...new Set(slabs.map(s => s.thickness_cm).filter(Boolean))].sort((a, b) => a - b);
-const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
+const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
 ---
 <Base title={i18n.catalogue.title} lang={lang}>
   <div class="container">
@@ -117,14 +117,25 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       </div>
     </div>
 
+    <!-- List view column header — hidden in grid mode via CSS -->
+    <div class="slab-list__header" id="slab-list-header" aria-hidden="true">
+      <div class="slab-list__header-thumb"></div>
+      <div>Materiał</div>
+      <div>Wymiary</div>
+      <div>Wykończenie</div>
+      <div>Pochodzenie</div>
+      <div>Status</div>
+      <div>ID</div>
+    </div>
+
     <div class="slab-grid" id="slab-grid">
       {slabs.length === 0 && (
         <div class="empty">{i18n.catalogue.results.none}</div>
       )}
       {slabs.map(slab => {
-        const fullPhoto = slab.photos.full[0];
-        const photoSrc = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp` : '/assets/slab-placeholder.svg';
-        const photoSrcLarge = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '/assets/slab-placeholder.svg';
+        const fullPhoto  = slab.photos.full[0];
+        const photoSrc   = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp`  : '/assets/slab-placeholder.svg';
+        const photoSrcLg = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '/assets/slab-placeholder.svg';
         const isSold     = slab.status.pl === 'Sprzedany';
         const isReserved = slab.status.pl === 'Zarezerwowany';
         return (
@@ -142,7 +153,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
             <a href={`/plyty/${slab.slab_id}`}>
               <div class="slab-card__photo" data-status={slab.status.pl?.toLowerCase()}>
                 <img src={photoSrc}
-                  srcset={fullPhoto ? `${photoSrc} 400w, ${photoSrcLarge} 1200w` : undefined}
+                  srcset={fullPhoto ? `${photoSrc} 400w, ${photoSrcLg} 1200w` : undefined}
                   sizes="(max-width: 600px) 90vw, 280px"
                   alt={slab.material_pl}
                   loading="lazy" />
@@ -161,6 +172,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
                 </div>
                 <div class="slab-card__meta">{slab.finish.pl}</div>
                 <div class="slab-card__origin">{slab.origin_pl}</div>
+                <div class="slab-card__status">{slab.status.pl}</div>
                 <div class="slab-card__id">{slab.slab_id}</div>
               </div>
             </a>
@@ -171,15 +183,14 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
   </div>
 
   <style>
-    /* ── View toggle button ── */
-    .catalogue-meta {
-      justify-content: space-between;
-    }
+    /* ── Catalogue meta row ── */
     .catalogue-meta__right {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
+
+    /* ── View toggle ── */
     .view-toggle {
       display: flex;
       gap: 2px;
@@ -201,22 +212,52 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       cursor: pointer;
       transition: background 0.15s, color 0.15s;
     }
-    .view-toggle__btn:hover { color: var(--text-muted); }
-    .view-toggle__btn.active {
-      background: var(--bg-card);
-      color: var(--text);
-      box-shadow: var(--shadow-sm);
+    .view-toggle__btn:hover  { color: var(--text-muted); }
+    .view-toggle__btn.active { background: var(--bg-card); color: var(--text); box-shadow: var(--shadow-sm); }
+
+    /* ── Shared column definition ──────────────────────────────────────────────
+       MUST match between .slab-list__header and .slab-card__body in list mode.
+       col 1: 80px thumb spacer | 2: material | 3: dims | 4: finish | 5: origin | 6: status | 7: id
+    ── */
+    :root {
+      --list-cols: 80px minmax(130px,1.6fr) minmax(170px,1.4fr) minmax(100px,1fr) minmax(90px,1fr) 110px 110px;
     }
 
-    /* ── List view ── */
+    /* ── List header ── */
+    .slab-list__header {
+      display: none; /* hidden in grid mode */
+      grid-template-columns: var(--list-cols);
+      gap: 0 12px;
+      padding: 6px 16px 6px 0;
+      margin-bottom: 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      background: var(--bg-elev);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-faint);
+    }
+    .slab-list__header-thumb { width: 80px; min-width: 80px; }
+    .slab-list__header > div { padding: 4px 0; }
+
+    /* ── List mode — grid wrapper ── */
     .slab-grid--list {
       display: flex;
       flex-direction: column;
       gap: 0;
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
       overflow: hidden;
     }
+    /* When list header is showing, remove top radius from grid */
+    .slab-list__header + .slab-grid--list {
+      border-top: none;
+    }
+
+    /* ── List mode — card ── */
     .slab-grid--list .slab-card {
       border-radius: 0;
       border: none;
@@ -228,39 +269,38 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
 
     .slab-grid--list .slab-card a {
       flex-direction: row;
-      align-items: center;
+      align-items: stretch;
       height: auto;
     }
 
-    /* Thumbnail in list mode */
+    /* Thumbnail */
     .slab-grid--list .slab-card__photo {
       width: 80px;
       min-width: 80px;
-      height: 60px;
+      height: auto;
+      min-height: 56px;
       aspect-ratio: unset;
       border-radius: 0;
       flex-shrink: 0;
     }
-    .slab-grid--list .slab-card__photo img {
-      object-fit: cover;
-      height: 100%;
-    }
-    /* Hide badge in list mode — status shown as text */
+    .slab-grid--list .slab-card__photo img { object-fit: cover; height: 100%; }
     .slab-grid--list .slab-card__badge { display: none; }
 
-    /* Body layout in list mode */
+    /* Card body — same columns as header (minus the 80px thumb col, already consumed by the photo) */
     .slab-grid--list .slab-card__body {
       display: grid;
-      grid-template-columns: minmax(140px, 1.5fr) minmax(160px, 1.5fr) minmax(100px, 1fr) minmax(80px, 1fr) auto;
+      grid-template-columns: minmax(130px,1.6fr) minmax(170px,1.4fr) minmax(100px,1fr) minmax(90px,1fr) 110px 110px;
       align-items: center;
-      padding: 10px 16px;
-      gap: 12px;
+      padding: 8px 16px 8px 12px;
+      gap: 0 12px;
       flex: 1;
       min-width: 0;
     }
 
+    /* Column cells */
     .slab-grid--list .slab-card__material {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -268,16 +308,20 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
     .slab-grid--list .slab-card__dims {
       margin: 0;
       flex-wrap: nowrap;
-      font-size: 0.9rem;
+      align-items: center;
     }
-    .slab-grid--list .slab-card__dim { font-size: 0.9rem; }
+    .slab-grid--list .slab-card__dim  { font-size: 0.85rem; }
+    .slab-grid--list .slab-card__area { font-size: 0.75rem; }
+
     .slab-grid--list .slab-card__meta {
       font-size: 0.85rem;
       color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin: 0;
     }
+
     /* Origin: hidden in grid, visible in list */
     .slab-card__origin { display: none; }
     .slab-grid--list .slab-card__origin {
@@ -288,45 +332,56 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+    /* Status: hidden in grid, visible as its own column in list */
+    .slab-card__status { display: none; }
+    .slab-grid--list .slab-card__status {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .slab-grid--list .slab-card[data-status="Dostępny"]     .slab-card__status { color: #3d8a4e; }
+    .slab-grid--list .slab-card[data-status="Zarezerwowany"] .slab-card__status { color: #8a6b1a; }
+    .slab-grid--list .slab-card[data-status="Sprzedany"]    .slab-card__status { color: var(--text-faint); }
+
     .slab-grid--list .slab-card__id {
+      font-size: 0.75rem;
+      color: var(--text-faint);
       margin-top: 0;
       padding-top: 0;
-      font-size: 0.75rem;
-      text-align: right;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
     }
 
-    /* Status colour in list mode via data-status on the card */
-    .slab-grid--list .slab-card[data-status="Sprzedany"] .slab-card__id::before {
-      content: 'Sprzedany · ';
-      color: var(--text-faint);
-    }
-    .slab-grid--list .slab-card[data-status="Zarezerwowany"] .slab-card__id::before {
-      content: 'Zarezerwowany · ';
-      color: #8a6b1a;
-    }
-
-    /* Responsive: collapse list columns on small screens */
-    @media (max-width: 700px) {
+    /* ── Responsive ── */
+    @media (max-width: 780px) {
+      :root { --list-cols: 64px 1fr 1fr 80px; }
       .slab-grid--list .slab-card__body {
-        grid-template-columns: 1fr 1fr;
-        gap: 4px 12px;
+        grid-template-columns: 1fr 1fr 80px;
       }
+      .slab-grid--list .slab-card__photo { width: 64px; min-width: 64px; }
       .slab-grid--list .slab-card__origin,
-      .slab-grid--list .slab-card__id { grid-column: span 2; }
+      .slab-grid--list .slab-card__status { display: none; }
+      .slab-list__header { display: none !important; }
     }
   </style>
 
   <script>
-    const grid       = document.getElementById('slab-grid');
-    const cards      = Array.from(grid.querySelectorAll('.slab-card'));
-    const countEl    = document.getElementById('results-count');
-    const countTpl   = countEl.dataset.template;
-    const filters    = document.querySelectorAll('[data-filter]');
-    const clearBtn   = document.getElementById('clear-filters');
+    const grid        = document.getElementById('slab-grid');
+    const listHeader  = document.getElementById('slab-list-header');
+    const cards       = Array.from(grid.querySelectorAll('.slab-card'));
+    const countEl     = document.getElementById('results-count');
+    const countTpl    = countEl.dataset.template;
+    const filters     = document.querySelectorAll('[data-filter]');
+    const clearBtn    = document.getElementById('clear-filters');
     const searchInput = document.getElementById('f-search');
-    const btnGrid    = document.getElementById('btn-grid');
-    const btnList    = document.getElementById('btn-list');
+    const btnGrid     = document.getElementById('btn-grid');
+    const btnList     = document.getElementById('btn-list');
 
     // ── View toggle ──────────────────────────────────────────────────────────
     const PREF_KEY = 'glg_view_pref';
@@ -334,6 +389,7 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
     function setView(mode) {
       const isList = mode === 'list';
       grid.classList.toggle('slab-grid--list', isList);
+      listHeader.style.display = isList ? 'grid' : 'none';
       btnGrid.classList.toggle('active', !isList);
       btnList.classList.toggle('active',  isList);
       btnGrid.setAttribute('aria-pressed', String(!isList));
@@ -344,17 +400,12 @@ const statuses   = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
     btnGrid.addEventListener('click', () => setView('grid'));
     btnList.addEventListener('click', () => setView('list'));
 
-    // Restore preference
     try {
-      const saved = localStorage.getItem(PREF_KEY);
-      if (saved === 'list') setView('list');
+      if (localStorage.getItem(PREF_KEY) === 'list') setView('list');
     } catch(e) {}
 
     // ── Filters ──────────────────────────────────────────────────────────────
-    function getVal(id) {
-      const el = document.getElementById(id);
-      return el ? el.value : '';
-    }
+    function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 
     function applyFilters() {
       const search    = (searchInput?.value || '').toLowerCase().trim();
