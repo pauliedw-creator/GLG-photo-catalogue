@@ -50,8 +50,7 @@ const FINISH_MAP = {
   'szczotkowany':  { pl: 'Szczotkowany',   en: 'Brushed' },
   'płomieniowany': { pl: 'Płomieniowany', en: 'Flamed' },
   'piaskowany':     { pl: 'Piaskowany',     en: 'Sandblasted' },
-  'surowy':          { pl: 'Surowy',          en: 'Raw' },
-  'żywicowany':     { pl: 'Żywicowany',     en: 'Resin-treated' }
+  'surowy':          { pl: 'Surowy',          en: 'Raw' }
 };
 const EDGE_MAP = {
   'cięty':      { pl: 'Cięty',     en: 'Cut' },
@@ -65,8 +64,7 @@ const STATUS_MAP = {
 const ORIGIN_MAP = {
   'Indie': 'India', 'Chiny': 'China', 'Brazylia': 'Brazil',
   'RPA': 'South Africa', 'Norwegia': 'Norway', 'Włochy': 'Italy',
-  'Hiszpania': 'Spain', 'Inne': 'Other',
-  'Angola': 'Angola', 'Szwecja': 'Sweden', 'Finlandia': 'Finland'
+  'Hiszpania': 'Spain', 'Inne': 'Other'
 };
 const STONE_TYPE_MAP = {
   'granit':   { pl: 'Granit',   en: 'Granite' },
@@ -131,13 +129,17 @@ function normaliseRow(r) {
 }
 
 async function listChildFolders(parentId) {
-  // Shared drives may behave differently — for personal Drive, q + parents + name works
-  const res = await drive.files.list({
-    q: `'${parentId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-    fields: 'files(id, name)',
-    pageSize: 1000
-  });
-  return res.data.files || [];
+  const q = `'${parentId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+  let all = []; let pageToken;
+  do {
+    const res = await drive.files.list({
+      q, fields: 'nextPageToken, files(id, name)', pageSize: 1000,
+      ...(pageToken ? { pageToken } : {})
+    });
+    all = all.concat(res.data.files || []);
+    pageToken = res.data.nextPageToken;
+  } while (pageToken);
+  return all;
 }
 
 async function listFilesInFolder(folderId) {
