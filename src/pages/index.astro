@@ -117,14 +117,13 @@ const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       </div>
     </div>
 
-    <!-- List view column header — hidden in grid mode via CSS -->
     <div class="slab-list__header" id="slab-list-header" aria-hidden="true">
       <div class="slab-list__header-thumb"></div>
       <div>Materiał</div>
       <div>Wymiary</div>
-      <div>Wykończenie</div>
-      <div>Pochodzenie</div>
-      <div>Status</div>
+      <div class="col-hide-mobile">Wykończenie</div>
+      <div class="col-hide-mobile">Pochodzenie</div>
+      <div class="col-hide-mobile">Status</div>
       <div>ID</div>
     </div>
 
@@ -183,14 +182,11 @@ const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
   </div>
 
   <style>
-    /* ── Catalogue meta row ── */
     .catalogue-meta__right {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-
-    /* ── View toggle ── */
     .view-toggle {
       display: flex;
       gap: 2px;
@@ -203,10 +199,8 @@ const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 28px;
-      background: none;
-      border: none;
+      width: 30px; height: 28px;
+      background: none; border: none;
       border-radius: 4px;
       color: var(--text-faint);
       cursor: pointer;
@@ -215,21 +209,19 @@ const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
     .view-toggle__btn:hover  { color: var(--text-muted); }
     .view-toggle__btn.active { background: var(--bg-card); color: var(--text); box-shadow: var(--shadow-sm); }
 
-    /* ── Shared column definition ──────────────────────────────────────────────
-       MUST match between .slab-list__header and .slab-card__body in list mode.
-       col 1: 80px thumb spacer | 2: material | 3: dims | 4: finish | 5: origin | 6: status | 7: id
-    ── */
-    :root {
-      --list-cols: 80px minmax(130px,1.6fr) minmax(170px,1.4fr) minmax(100px,1fr) minmax(90px,1fr) 110px 110px;
+    /* ── Column definitions ── */
+    /* Desktop: thumb | material | dims | finish | origin | status | id */
+    .slab-list__header,
+    .slab-grid--list .slab-card__body {
+      --_cols: minmax(130px,1.6fr) minmax(170px,1.4fr) minmax(100px,1fr) minmax(90px,1fr) 110px 110px;
     }
 
     /* ── List header ── */
     .slab-list__header {
-      display: none; /* hidden in grid mode */
-      grid-template-columns: var(--list-cols);
+      display: none;
+      grid-template-columns: 80px var(--_cols);
       gap: 0 12px;
       padding: 6px 16px 6px 0;
-      margin-bottom: 0;
       border: 1px solid var(--border);
       border-bottom: none;
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -243,7 +235,7 @@ const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
     .slab-list__header-thumb { width: 80px; min-width: 80px; }
     .slab-list__header > div { padding: 4px 0; }
 
-    /* ── List mode — grid wrapper ── */
+    /* ── List grid ── */
     .slab-grid--list {
       display: flex;
       flex-direction: column;
@@ -252,121 +244,94 @@ const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
       border-radius: 0 0 var(--radius-lg) var(--radius-lg);
       overflow: hidden;
     }
-    /* When list header is showing, remove top radius from grid */
-    .slab-list__header + .slab-grid--list {
-      border-top: none;
-    }
+    .slab-list__header + .slab-grid--list { border-top: none; }
 
-    /* ── List mode — card ── */
+    /* ── List card ── */
     .slab-grid--list .slab-card {
-      border-radius: 0;
-      border: none;
+      border-radius: 0; border: none;
       border-bottom: 1px solid var(--border);
       box-shadow: none;
     }
     .slab-grid--list .slab-card:last-child { border-bottom: none; }
     .slab-grid--list .slab-card:hover { transform: none; background: var(--bg-elev); }
+    .slab-grid--list .slab-card a { flex-direction: row; align-items: stretch; height: auto; }
 
-    .slab-grid--list .slab-card a {
-      flex-direction: row;
-      align-items: stretch;
-      height: auto;
-    }
-
-    /* Thumbnail */
     .slab-grid--list .slab-card__photo {
-      width: 80px;
-      min-width: 80px;
-      height: auto;
-      min-height: 56px;
-      aspect-ratio: unset;
-      border-radius: 0;
-      flex-shrink: 0;
+      width: 80px; min-width: 80px;
+      height: auto; min-height: 56px;
+      aspect-ratio: unset; border-radius: 0; flex-shrink: 0;
     }
     .slab-grid--list .slab-card__photo img { object-fit: cover; height: 100%; }
     .slab-grid--list .slab-card__badge { display: none; }
 
-    /* Card body — same columns as header (minus the 80px thumb col, already consumed by the photo) */
     .slab-grid--list .slab-card__body {
       display: grid;
-      grid-template-columns: minmax(130px,1.6fr) minmax(170px,1.4fr) minmax(100px,1fr) minmax(90px,1fr) 110px 110px;
+      grid-template-columns: var(--_cols);
       align-items: center;
       padding: 8px 16px 8px 12px;
       gap: 0 12px;
-      flex: 1;
-      min-width: 0;
+      flex: 1; min-width: 0;
     }
 
-    /* Column cells */
     .slab-grid--list .slab-card__material {
-      font-size: 0.9rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 0.9rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .slab-grid--list .slab-card__dims {
-      margin: 0;
-      flex-wrap: nowrap;
-      align-items: center;
-    }
+    .slab-grid--list .slab-card__dims { margin: 0; flex-wrap: nowrap; align-items: center; }
     .slab-grid--list .slab-card__dim  { font-size: 0.85rem; }
     .slab-grid--list .slab-card__area { font-size: 0.75rem; }
-
     .slab-grid--list .slab-card__meta {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin: 0;
+      font-size: 0.85rem; color: var(--text-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;
     }
 
-    /* Origin: hidden in grid, visible in list */
     .slab-card__origin { display: none; }
     .slab-grid--list .slab-card__origin {
-      display: block;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      display: block; font-size: 0.85rem; color: var(--text-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* Status: hidden in grid, visible as its own column in list */
     .slab-card__status { display: none; }
     .slab-grid--list .slab-card__status {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      display: block; font-size: 0.78rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .slab-grid--list .slab-card[data-status="Dostępny"]     .slab-card__status { color: #3d8a4e; }
+    .slab-grid--list .slab-card[data-status="Dostępny"]      .slab-card__status { color: #3d8a4e; }
     .slab-grid--list .slab-card[data-status="Zarezerwowany"] .slab-card__status { color: #8a6b1a; }
-    .slab-grid--list .slab-card[data-status="Sprzedany"]    .slab-card__status { color: var(--text-faint); }
+    .slab-grid--list .slab-card[data-status="Sprzedany"]     .slab-card__status { color: var(--text-faint); }
 
     .slab-grid--list .slab-card__id {
-      font-size: 0.75rem;
-      color: var(--text-faint);
-      margin-top: 0;
-      padding-top: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 0.75rem; color: var(--text-faint);
+      margin-top: 0; padding-top: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       text-align: right;
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 780px) {
-      :root { --list-cols: 64px 1fr 1fr 80px; }
+    /* ── Mobile: material + dims + id only ── */
+    @media (max-width: 700px) {
       .slab-grid--list .slab-card__body {
-        grid-template-columns: 1fr 1fr 80px;
+        grid-template-columns: 1fr auto;
+        gap: 2px 10px;
+        padding: 8px 12px 8px 10px;
       }
-      .slab-grid--list .slab-card__photo { width: 64px; min-width: 64px; }
+      /* material spans both columns, prominent */
+      .slab-grid--list .slab-card__material {
+        grid-column: 1 / -1;
+        font-size: 0.88rem;
+      }
+      /* dims col 1, id col 2 */
+      .slab-grid--list .slab-card__dims { grid-column: 1; }
+      .slab-grid--list .slab-card__id   { grid-column: 2; align-self: end; text-align: right; }
+
+      /* hide finish, origin, status on mobile */
+      .slab-grid--list .slab-card__meta,
       .slab-grid--list .slab-card__origin,
       .slab-grid--list .slab-card__status { display: none; }
+
+      /* shrink thumbnail */
+      .slab-grid--list .slab-card__photo { width: 60px; min-width: 60px; }
+
+      /* hide header entirely on mobile */
       .slab-list__header { display: none !important; }
     }
   </style>
@@ -383,7 +348,6 @@ const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
     const btnGrid     = document.getElementById('btn-grid');
     const btnList     = document.getElementById('btn-list');
 
-    // ── View toggle ──────────────────────────────────────────────────────────
     const PREF_KEY = 'glg_view_pref';
 
     function setView(mode) {
@@ -399,12 +363,8 @@ const statuses    = [...new Set(slabs.map(s => s.status.pl).filter(Boolean))];
 
     btnGrid.addEventListener('click', () => setView('grid'));
     btnList.addEventListener('click', () => setView('list'));
+    try { if (localStorage.getItem(PREF_KEY) === 'list') setView('list'); } catch(e) {}
 
-    try {
-      if (localStorage.getItem(PREF_KEY) === 'list') setView('list');
-    } catch(e) {}
-
-    // ── Filters ──────────────────────────────────────────────────────────────
     function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 
     function applyFilters() {
