@@ -9,12 +9,12 @@ const slabs = slabsData.slabs || [];
 const generatedAt = slabsData.generated_at || new Date().toISOString();
 const generatedDate = new Date(generatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-const materials = [...new Set(slabs.map(s => s.material_en).filter(Boolean))].sort();
-const stoneTypes = [...new Set(slabs.map(s => s.stone_type?.en).filter(Boolean))].sort();
-const colours = [...new Set(slabs.map(s => s.colour?.en).filter(Boolean))].sort();
-const finishes = [...new Set(slabs.map(s => s.finish.en).filter(Boolean))].sort();
+const materials   = [...new Set(slabs.map(s => s.material_en).filter(Boolean))].sort();
+const stoneTypes  = [...new Set(slabs.map(s => s.stone_type?.en).filter(Boolean))].sort();
+const colours     = [...new Set(slabs.map(s => s.colour?.en).filter(Boolean))].sort();
+const finishes    = [...new Set(slabs.map(s => s.finish.en).filter(Boolean))].sort();
 const thicknesses = [...new Set(slabs.map(s => s.thickness_cm).filter(Boolean))].sort((a, b) => a - b);
-const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
+const statuses    = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
 ---
 <Base title={i18n.catalogue.title} lang={lang} canonicalPath="/en/">
   <div class="container">
@@ -98,16 +98,42 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
 
     <div class="catalogue-meta">
       <div id="results-count" data-template={`${i18n.catalogue.results.showing} {n} ${i18n.catalogue.results.of} ${slabs.length} ${i18n.catalogue.results.slabs}`}></div>
-      <button class="btn-link" id="clear-filters">{i18n.catalogue.filters.clear}</button>
+      <div class="catalogue-meta__right">
+        <button class="btn-link" id="clear-filters">{i18n.catalogue.filters.clear}</button>
+        <div class="view-toggle" aria-label="View mode">
+          <button class="view-toggle__btn active" id="btn-grid" title="Grid view" aria-pressed="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <rect x="0" y="0" width="7" height="7" rx="1"/><rect x="9" y="0" width="7" height="7" rx="1"/>
+              <rect x="0" y="9" width="7" height="7" rx="1"/><rect x="9" y="9" width="7" height="7" rx="1"/>
+            </svg>
+          </button>
+          <button class="view-toggle__btn" id="btn-list" title="List view" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <rect x="0" y="1" width="16" height="2.5" rx="1"/><rect x="0" y="6.75" width="16" height="2.5" rx="1"/>
+              <rect x="0" y="12.5" width="16" height="2.5" rx="1"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="slab-list__header" id="slab-list-header" aria-hidden="true">
+      <div class="slab-list__header-thumb"></div>
+      <div>Material</div>
+      <div>Dimensions</div>
+      <div class="col-hide-mobile">Finish</div>
+      <div class="col-hide-mobile">Origin</div>
+      <div class="col-hide-mobile">Status</div>
+      <div>ID</div>
     </div>
 
     <div class="slab-grid" id="slab-grid">
       {slabs.length === 0 && <div class="empty">{i18n.catalogue.results.none}</div>}
       {slabs.map(slab => {
-        const fullPhoto = slab.photos.full[0];
-        const photoSrc = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp` : '/assets/slab-placeholder.svg';
-        const photoSrcLarge = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '/assets/slab-placeholder.svg';
-        const isSold = slab.status.en === 'Sold';
+        const fullPhoto  = slab.photos.full[0];
+        const photoSrc   = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-400.webp`  : '/assets/slab-placeholder.svg';
+        const photoSrcLg = fullPhoto ? `/photos/${slab.slab_id}/${fullPhoto}-1200.webp` : '/assets/slab-placeholder.svg';
+        const isSold     = slab.status.en === 'Sold';
         const isReserved = slab.status.en === 'Reserved';
         return (
           <article class="slab-card"
@@ -119,15 +145,16 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
             data-status={slab.status.en}
             data-area={slab.area_sqm}
             data-date={slab.date_received}
+            data-origin={slab.origin_en || ''}
             data-search={`${slab.material_en} ${slab.material_pl} ${slab.slab_id} ${slab.origin_en} ${slab.notes_en}`.toLowerCase()}>
             <a href={`/en/slabs/${slab.slab_id}`}>
               <div class="slab-card__photo" data-status={slab.status.en?.toLowerCase()}>
                 <img src={photoSrc}
-                  srcset={fullPhoto ? `${photoSrc} 400w, ${photoSrcLarge} 1200w` : undefined}
+                  srcset={fullPhoto ? `${photoSrc} 400w, ${photoSrcLg} 1200w` : undefined}
                   sizes="(max-width: 600px) 90vw, 280px"
                   alt={slab.material_en}
                   loading="lazy" />
-                {isSold && <span class="slab-card__badge slab-card__badge--sold">{i18n.slab.sold}</span>}
+                {isSold     && <span class="slab-card__badge slab-card__badge--sold">{i18n.slab.sold}</span>}
                 {isReserved && <span class="slab-card__badge slab-card__badge--reserved">{i18n.slab.reserved}</span>}
               </div>
               <div class="slab-card__body">
@@ -141,6 +168,8 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
                   <span class="slab-card__area">{slab.area_sqm.toFixed(2)} m²</span>
                 </div>
                 <div class="slab-card__meta">{slab.finish.en}</div>
+                <div class="slab-card__origin">{slab.origin_en}</div>
+                <div class="slab-card__status">{slab.status.en}</div>
                 <div class="slab-card__id">{slab.slab_id}</div>
               </div>
             </a>
@@ -150,14 +179,176 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
     </div>
   </div>
 
+  <style>
+    .catalogue-meta__right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .view-toggle {
+      display: flex;
+      gap: 2px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px;
+    }
+    .view-toggle__btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px; height: 28px;
+      background: none; border: none;
+      border-radius: 4px;
+      color: var(--text-faint);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .view-toggle__btn:hover  { color: var(--text-muted); }
+    .view-toggle__btn.active { background: var(--bg-card); color: var(--text); box-shadow: var(--shadow-sm); }
+
+    .slab-list__header,
+    .slab-grid--list .slab-card__body {
+      --_cols: minmax(130px,1.6fr) minmax(170px,1.4fr) minmax(100px,1fr) minmax(90px,1fr) 110px 110px;
+    }
+
+    .slab-list__header {
+      display: none;
+      grid-template-columns: 80px var(--_cols);
+      gap: 0 12px;
+      padding: 6px 16px 6px 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      background: var(--bg-elev);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-faint);
+    }
+    .slab-list__header-thumb { width: 80px; min-width: 80px; }
+    .slab-list__header > div { padding: 4px 0; }
+
+    .slab-grid--list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      overflow: hidden;
+    }
+    .slab-list__header + .slab-grid--list { border-top: none; }
+
+    .slab-grid--list .slab-card {
+      border-radius: 0; border: none;
+      border-bottom: 1px solid var(--border);
+      box-shadow: none;
+    }
+    .slab-grid--list .slab-card:last-child { border-bottom: none; }
+    .slab-grid--list .slab-card:hover { transform: none; background: var(--bg-elev); }
+    .slab-grid--list .slab-card a { flex-direction: row; align-items: stretch; height: auto; }
+
+    .slab-grid--list .slab-card__photo {
+      width: 80px; min-width: 80px;
+      height: auto; min-height: 56px;
+      aspect-ratio: unset; border-radius: 0; flex-shrink: 0;
+    }
+    .slab-grid--list .slab-card__photo img { object-fit: cover; height: 100%; }
+    .slab-grid--list .slab-card__badge { display: none; }
+
+    .slab-grid--list .slab-card__body {
+      display: grid;
+      grid-template-columns: var(--_cols);
+      align-items: center;
+      padding: 8px 16px 8px 12px;
+      gap: 0 12px;
+      flex: 1; min-width: 0;
+    }
+
+    .slab-grid--list .slab-card__material {
+      font-size: 0.9rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .slab-grid--list .slab-card__dims { margin: 0; flex-wrap: nowrap; align-items: center; }
+    .slab-grid--list .slab-card__dim  { font-size: 0.85rem; }
+    .slab-grid--list .slab-card__area { font-size: 0.75rem; }
+    .slab-grid--list .slab-card__meta {
+      font-size: 0.85rem; color: var(--text-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;
+    }
+
+    .slab-card__origin { display: none; }
+    .slab-grid--list .slab-card__origin {
+      display: block; font-size: 0.85rem; color: var(--text-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .slab-card__status { display: none; }
+    .slab-grid--list .slab-card__status {
+      display: block; font-size: 0.78rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .slab-grid--list .slab-card[data-status="Available"] .slab-card__status { color: #3d8a4e; }
+    .slab-grid--list .slab-card[data-status="Reserved"]  .slab-card__status { color: #8a6b1a; }
+    .slab-grid--list .slab-card[data-status="Sold"]      .slab-card__status { color: var(--text-faint); }
+
+    .slab-grid--list .slab-card__id {
+      font-size: 0.75rem; color: var(--text-faint);
+      margin-top: 0; padding-top: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      text-align: right;
+    }
+
+    /* ── Mobile: material + dims + id only ── */
+    @media (max-width: 700px) {
+      .slab-grid--list .slab-card__body {
+        grid-template-columns: 1fr auto;
+        gap: 2px 10px;
+        padding: 8px 12px 8px 10px;
+      }
+      .slab-grid--list .slab-card__material {
+        grid-column: 1 / -1;
+        font-size: 0.88rem;
+      }
+      .slab-grid--list .slab-card__dims { grid-column: 1; }
+      .slab-grid--list .slab-card__id   { grid-column: 2; align-self: end; text-align: right; }
+      .slab-grid--list .slab-card__meta,
+      .slab-grid--list .slab-card__origin,
+      .slab-grid--list .slab-card__status { display: none; }
+      .slab-grid--list .slab-card__photo { width: 60px; min-width: 60px; }
+      .slab-list__header { display: none !important; }
+    }
+  </style>
+
   <script>
-    const grid = document.getElementById('slab-grid');
-    const cards = Array.from(grid.querySelectorAll('.slab-card'));
-    const countEl = document.getElementById('results-count');
-    const countTpl = countEl.dataset.template;
-    const filters = document.querySelectorAll('[data-filter]');
-    const clearBtn = document.getElementById('clear-filters');
+    const grid        = document.getElementById('slab-grid');
+    const listHeader  = document.getElementById('slab-list-header');
+    const cards       = Array.from(grid.querySelectorAll('.slab-card'));
+    const countEl     = document.getElementById('results-count');
+    const countTpl    = countEl.dataset.template;
+    const filters     = document.querySelectorAll('[data-filter]');
+    const clearBtn    = document.getElementById('clear-filters');
     const searchInput = document.getElementById('f-search');
+    const btnGrid     = document.getElementById('btn-grid');
+    const btnList     = document.getElementById('btn-list');
+
+    const PREF_KEY = 'glg_view_pref';
+
+    function setView(mode) {
+      const isList = mode === 'list';
+      grid.classList.toggle('slab-grid--list', isList);
+      listHeader.style.display = isList ? 'grid' : 'none';
+      btnGrid.classList.toggle('active', !isList);
+      btnList.classList.toggle('active',  isList);
+      btnGrid.setAttribute('aria-pressed', String(!isList));
+      btnList.setAttribute('aria-pressed', String(isList));
+      try { localStorage.setItem(PREF_KEY, mode); } catch(e) {}
+    }
+
+    btnGrid.addEventListener('click', () => setView('grid'));
+    btnList.addEventListener('click', () => setView('list'));
+    try { if (localStorage.getItem(PREF_KEY) === 'list') setView('list'); } catch(e) {}
 
     function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 
@@ -181,11 +372,13 @@ const statuses = [...new Set(slabs.map(s => s.status.en).filter(Boolean))];
         if (status    && c.dataset.status    !== status)      return false;
         return true;
       });
+
       visible.sort((a, b) => {
-        if (sort === 'largest') return parseFloat(b.dataset.area) - parseFloat(a.dataset.area);
+        if (sort === 'largest')  return parseFloat(b.dataset.area) - parseFloat(a.dataset.area);
         if (sort === 'material') return a.dataset.material.localeCompare(b.dataset.material);
         return (b.dataset.date || '').localeCompare(a.dataset.date || '');
       });
+
       cards.forEach(c => c.style.display = 'none');
       visible.forEach(c => { c.style.display = ''; grid.appendChild(c); });
       countEl.textContent = countTpl.replace('{n}', visible.length);
