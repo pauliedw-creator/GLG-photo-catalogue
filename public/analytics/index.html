@@ -4,32 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analytics — Golden Leaf Granit</title>
+  <!-- 1. Favicon matching katalog -->
+  <link rel="icon" href="/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Cinzel:wght@600&display=swap" rel="stylesheet">
   <style>
-    /* ── Design tokens (matches katalog global.css) ── */
     :root {
-      --gold:           #C5A050;
-      --gold-soft:      #d4b76a;
-      --gold-dark:      #8a6c2a;
-      --chrome-bg:      #222426;
-      --chrome-bg-elev: #2a2c30;
-      --chrome-text:    #ECECF1;
+      --gold:              #C5A050;
+      --gold-soft:         #d4b76a;
+      --gold-dark:         #8a6c2a;
+      --chrome-bg:         #222426;
+      --chrome-bg-elev:    #2a2c30;
+      --chrome-text:       #ECECF1;
       --chrome-text-muted: #b4b8c4;
-      --chrome-border:  #3a3d44;
-      --bg:             #f1ece2;
-      --bg-elev:        #e8e2d4;
-      --bg-card:        #ffffff;
-      --border:         #d8d2c4;
-      --border-strong:  #bcb39e;
-      --text:           #1f2024;
-      --text-muted:     #5a5a60;
-      --text-faint:     #888690;
-      --radius:         8px;
-      --radius-lg:      14px;
-      --shadow-sm:      0 1px 2px rgba(40,30,10,0.05);
-      --shadow-md:      0 4px 14px rgba(40,30,10,0.08);
-      --green:          #3d8a4e;
+      --chrome-border:     #3a3d44;
+      --bg:                #f1ece2;
+      --bg-elev:           #e8e2d4;
+      --bg-card:           #ffffff;
+      --border:            #d8d2c4;
+      --border-strong:     #bcb39e;
+      --text:              #1f2024;
+      --text-muted:        #5a5a60;
+      --text-faint:        #888690;
+      --radius:            8px;
+      --radius-lg:         14px;
+      --shadow-sm:         0 1px 2px rgba(40,30,10,0.05);
+      --shadow-md:         0 4px 14px rgba(40,30,10,0.08);
+      --green:             #3d8a4e;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,366 +50,164 @@
     .gate {
       position: fixed; inset: 0;
       background: var(--chrome-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       z-index: 999;
     }
     .gate-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      width: 300px;
-      padding: 40px 32px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      width: 300px; padding: 40px 32px;
       background: var(--chrome-bg-elev);
       border: 1px solid var(--chrome-border);
       border-radius: var(--radius-lg);
       box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
-    .gate-logo {
-      font-family: "Cinzel", Georgia, serif;
-      font-size: 13px;
-      color: var(--gold);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-align: center;
-      line-height: 1.8;
-      margin-bottom: 4px;
-    }
-    .gate-sub {
-      font-size: 11px;
-      color: var(--chrome-text-muted);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-top: -10px;
-      margin-bottom: 4px;
-    }
+    .gate-logo { font-family: "Cinzel", Georgia, serif; font-size: 13px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; text-align: center; line-height: 1.8; margin-bottom: 4px; }
+    .gate-sub  { font-size: 11px; color: var(--chrome-text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: -10px; margin-bottom: 4px; }
     .gate-input {
-      width: 100%;
-      background: var(--chrome-bg);
-      border: 1px solid var(--chrome-border);
-      color: var(--chrome-text);
-      padding: 10px 14px;
-      font-size: 14px;
-      border-radius: var(--radius);
-      outline: none;
-      text-align: center;
-      letter-spacing: 0.05em;
+      width: 100%; background: var(--chrome-bg); border: 1px solid var(--chrome-border);
+      color: var(--chrome-text); padding: 10px 14px; font-size: 14px;
+      border-radius: var(--radius); outline: none; text-align: center; letter-spacing: 0.05em;
     }
     .gate-input:focus { border-color: var(--gold-dark); }
     .gate-btn {
-      width: 100%;
-      background: var(--gold);
-      color: #1a1a1a;
-      border: none;
-      padding: 11px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: var(--radius);
-      letter-spacing: 0.04em;
-      transition: background 0.15s;
+      width: 100%; background: var(--gold); color: #1a1a1a; border: none;
+      padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer;
+      border-radius: var(--radius); transition: background 0.15s;
     }
     .gate-btn:hover { background: var(--gold-soft); }
-    .gate-error {
-      font-size: 11px;
-      color: #e08080;
-      min-height: 14px;
-    }
+    .gate-error { font-size: 11px; color: #e08080; min-height: 14px; }
 
     /* ── Header ── */
     header {
-      background: var(--chrome-bg);
-      border-bottom: 1px solid var(--chrome-border);
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      background: var(--chrome-bg); border-bottom: 1px solid var(--chrome-border);
+      padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; position: sticky; top: 0; z-index: 50;
     }
-    header a {
-      color: var(--chrome-text-muted);
-      text-decoration: none;
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      transition: color 0.15s;
-    }
+    header a { color: var(--chrome-text-muted); text-decoration: none; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.15s; }
     header a:hover { color: var(--gold); }
-    .header-title {
-      font-family: "Cinzel", Georgia, serif;
-      font-size: 12px;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-    }
+    .header-title { font-family: "Cinzel", Georgia, serif; font-size: 12px; color: var(--gold); letter-spacing: 0.1em; }
 
     /* ── Setup bar ── */
     .setup {
-      padding: 14px 24px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-elev);
-      display: flex;
-      gap: 12px;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      flex-shrink: 0;
+      padding: 14px 24px; border-bottom: 1px solid var(--border);
+      background: var(--bg-elev); display: flex; gap: 12px;
+      align-items: flex-end; flex-wrap: wrap; flex-shrink: 0;
     }
     .field { display: flex; flex-direction: column; gap: 5px; }
-    label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
+    label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 500; }
     select {
-      background: var(--bg-card);
-      border: 1px solid var(--border-strong);
-      color: var(--text);
-      padding: 7px 11px;
-      font-size: 13px;
-      border-radius: var(--radius);
-      outline: none;
+      background: var(--bg-card); border: 1px solid var(--border-strong);
+      color: var(--text); padding: 7px 11px; font-size: 13px;
+      border-radius: var(--radius); outline: none;
     }
     select:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
-    .btn-load {
-      background: var(--gold);
-      color: #1a1a1a;
-      border: none;
-      padding: 8px 22px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: var(--radius);
-      transition: background 0.15s;
+    .btn {
+      border: none; padding: 8px 18px; font-size: 13px; font-weight: 600;
+      cursor: pointer; border-radius: var(--radius); transition: background 0.15s; white-space: nowrap;
     }
-    .btn-load:hover { background: var(--gold-soft); }
-    .btn-load:disabled { opacity: 0.4; cursor: default; }
+    .btn-gold { background: var(--gold); color: #1a1a1a; }
+    .btn-gold:hover { background: var(--gold-soft); }
+    .btn-gold:disabled { opacity: 0.4; cursor: default; }
+    .btn-outline { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-strong); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+    .btn-outline:disabled { opacity: 0.4; cursor: default; }
 
     /* ── Status bar ── */
     .status-bar {
-      padding: 7px 24px;
-      font-size: 12px;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-      min-height: 30px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-      background: var(--bg);
+      padding: 7px 24px; font-size: 12px; color: var(--text-muted);
+      border-bottom: 1px solid var(--border); min-height: 30px;
+      display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: var(--bg);
     }
-    .spinner {
-      width: 11px; height: 11px;
-      border: 2px solid var(--border);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.65s linear infinite;
-      flex-shrink: 0;
-    }
+    .spinner { width: 11px; height: 11px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.65s linear infinite; flex-shrink: 0; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── Stats bar ── */
     .stats-bar {
-      display: none;
-      padding: 14px 24px;
-      gap: 36px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-card);
-      flex-shrink: 0;
-      flex-wrap: wrap;
+      display: none; padding: 14px 24px; gap: 36px;
+      border-bottom: 1px solid var(--border); background: var(--bg-card);
+      flex-shrink: 0; flex-wrap: wrap; align-items: flex-end;
     }
     .stats-bar.visible { display: flex; }
     .stat { display: flex; flex-direction: column; gap: 2px; }
-    .stat-val {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--gold-dark);
-      line-height: 1;
-      font-family: "Cinzel", Georgia, serif;
-    }
-    .stat-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-faint);
-    }
+    .stat-val { font-size: 24px; font-weight: 700; color: var(--gold-dark); line-height: 1; font-family: "Cinzel", Georgia, serif; }
+    .stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
+    /* 5. Date range shown in stats bar */
+    .stat-range { margin-left: auto; font-size: 11px; color: var(--text-faint); text-align: right; line-height: 1.5; align-self: center; }
 
     /* ── Main grid ── */
-    .main {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      flex: 1;
-      min-height: 0;
-    }
-    @media (max-width: 800px) {
-      .main { grid-template-columns: 1fr; }
-    }
+    .main { display: grid; grid-template-columns: 1fr 300px; flex: 1; min-height: 0; }
+    @media (max-width: 800px) { .main { grid-template-columns: 1fr; } }
 
     /* ── Tabs panel ── */
-    .tabs-panel {
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
+    .tabs-panel { border-right: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0; }
     .tab-nav {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-      flex-shrink: 0;
-      background: var(--bg-elev);
-      scrollbar-width: none;
+      display: flex; border-bottom: 1px solid var(--border); overflow-x: auto;
+      flex-shrink: 0; background: var(--bg-elev); scrollbar-width: none;
     }
     .tab-nav::-webkit-scrollbar { display: none; }
     .tab-btn {
-      padding: 10px 14px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      white-space: nowrap;
-      font-weight: 500;
-      margin-bottom: -1px;
-      transition: color 0.15s;
+      padding: 10px 14px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+      background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--text-muted); cursor: pointer; white-space: nowrap;
+      font-weight: 500; margin-bottom: -1px; transition: color 0.15s;
     }
     .tab-btn:hover:not(:disabled) { color: var(--text); }
     .tab-btn.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
     .tab-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* 6. Tab toolbar with export button */
+    .tab-toolbar {
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 8px 16px; border-bottom: 1px solid var(--border);
+      background: var(--bg); flex-shrink: 0;
+    }
+    .btn-export {
+      background: none; border: 1px solid var(--border-strong); color: var(--text-muted);
+      padding: 4px 12px; font-size: 11px; border-radius: 5px; cursor: pointer;
+      font-weight: 500; letter-spacing: 0.04em; transition: all 0.15s;
+    }
+    .btn-export:hover { border-color: var(--gold); color: var(--gold-dark); }
+
     .tab-content { flex: 1; overflow-y: auto; padding: 20px; background: var(--bg); }
 
     /* ── Bars ── */
-    .bar-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .bar-label {
-      width: 180px;
-      font-size: 13px;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex-shrink: 0;
-    }
-    .bar-track {
-      flex: 1;
-      background: var(--bg-elev);
-      height: 6px;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .bar-fill {
-      height: 100%;
-      background: var(--gold);
-      border-radius: 3px;
-    }
-    .bar-count {
-      font-size: 12px;
-      color: var(--text-faint);
-      width: 32px;
-      text-align: right;
-      flex-shrink: 0;
-      font-variant-numeric: tabular-nums;
-    }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .bar-label { width: 180px; font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+    .bar-track { flex: 1; background: var(--bg-elev); height: 6px; border-radius: 3px; overflow: hidden; }
+    .bar-fill  { height: 100%; background: var(--gold); border-radius: 3px; }
+    .bar-count { font-size: 12px; color: var(--text-faint); width: 32px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
 
     /* ── Right panel ── */
-    .right-panel {
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      background: var(--bg-card);
-      border-left: 1px solid var(--border);
-    }
+    .right-panel { display: flex; flex-direction: column; min-height: 0; background: var(--bg-card); border-left: 1px solid var(--border); }
 
     /* ── Lookup ── */
-    .lookup-panel {
-      border-bottom: 1px solid var(--border);
-      padding: 16px;
-      flex-shrink: 0;
-    }
-    .panel-title {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--text-faint);
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    .lookup-status {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 7px;
-    }
+    .lookup-panel { border-bottom: 1px solid var(--border); padding: 16px; flex-shrink: 0; }
+    .panel-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-faint); margin-bottom: 8px; font-weight: 600; }
+    .lookup-status { font-size: 11px; color: var(--text-muted); margin-bottom: 7px; }
     .lookup-status.loaded { color: var(--green); font-weight: 500; }
+    .lookup-actions { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
     textarea {
-      width: 100%;
-      height: 64px;
-      background: var(--bg-elev);
-      border: 1px solid var(--border-strong);
-      color: var(--text);
-      font-size: 10px;
-      padding: 8px;
-      border-radius: var(--radius);
-      resize: none;
-      outline: none;
-      font-family: "SF Mono", "Menlo", monospace;
+      width: 100%; height: 60px; background: var(--bg-elev);
+      border: 1px solid var(--border-strong); color: var(--text);
+      font-size: 10px; padding: 8px; border-radius: var(--radius);
+      resize: none; outline: none; font-family: "SF Mono", "Menlo", monospace;
     }
     textarea:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
-    .formula-hint {
-      font-size: 9px;
-      color: var(--text-faint);
-      margin-top: 6px;
-      word-break: break-all;
-      line-height: 1.5;
-      font-family: "SF Mono", "Menlo", monospace;
-    }
+    .formula-hint { font-size: 9px; color: var(--text-faint); margin-top: 6px; word-break: break-all; line-height: 1.5; font-family: "SF Mono", "Menlo", monospace; }
     .formula-hint strong { color: var(--text-muted); }
 
     /* ── Recent ── */
     .recent-panel { flex: 1; overflow-y: auto; padding: 16px; }
-    .event-row {
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    .event-row { padding: 9px 0; border-bottom: 1px solid var(--border); }
     .event-row:last-child { border-bottom: none; }
-    .event-slab {
-      font-family: "SF Mono", "Menlo", monospace;
-      font-size: 12px;
-      color: var(--gold-dark);
-      font-weight: 600;
-    }
-    .event-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 3px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .event-slab { font-family: "SF Mono", "Menlo", monospace; font-size: 12px; color: var(--gold-dark); font-weight: 600; }
+    .event-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; }
 
-    /* ── Empty ── */
-    .empty {
-      color: var(--text-faint);
-      font-size: 13px;
-      padding: 24px 0;
-      text-align: center;
-    }
+    .empty { color: var(--text-faint); font-size: 13px; padding: 24px 0; text-align: center; }
   </style>
 </head>
 <body>
 
-<!-- Password gate -->
 <div class="gate" id="gate">
   <div class="gate-box">
     <div class="gate-logo">Golden Leaf Granit</div>
@@ -435,16 +234,18 @@
       <option value="0">All time</option>
     </select>
   </div>
-  <button class="btn-load" id="load-btn">Load</button>
+  <button class="btn btn-gold" id="load-btn">Load</button>
 </div>
 
 <div class="status-bar" id="status-bar">Select a period and click Load.</div>
 
+<!-- 5. Stats bar with date range -->
 <div class="stats-bar" id="stats-bar">
   <div class="stat"><div class="stat-val" id="s-views">&#8212;</div><div class="stat-label">Slab Views</div></div>
   <div class="stat"><div class="stat-val" id="s-unique">&#8212;</div><div class="stat-label">Unique Slabs</div></div>
   <div class="stat"><div class="stat-val" id="s-materials">&#8212;</div><div class="stat-label">Materials</div></div>
   <div class="stat"><div class="stat-val" id="s-pages">&#8212;</div><div class="stat-label">Pages Fetched</div></div>
+  <div class="stat-range" id="stat-range"></div>
 </div>
 
 <div class="main">
@@ -453,10 +254,14 @@
       <button class="tab-btn active" data-tab="material">Material</button>
       <button class="tab-btn" data-tab="slabId">Slab ID</button>
       <button class="tab-btn" data-tab="thickness">Thickness</button>
-      <button class="tab-btn" data-tab="origin"  data-needs-lookup disabled>Origin</button>
-      <button class="tab-btn" data-tab="finish"  data-needs-lookup disabled>Finish</button>
+      <button class="tab-btn" data-tab="origin" data-needs-lookup disabled>Origin</button>
+      <button class="tab-btn" data-tab="finish" data-needs-lookup disabled>Finish</button>
       <button class="tab-btn" data-tab="country">Country</button>
       <button class="tab-btn" data-tab="device">Device</button>
+    </div>
+    <!-- 6. Export button -->
+    <div class="tab-toolbar">
+      <button class="btn-export" id="export-btn" disabled>&#8595; Export CSV</button>
     </div>
     <div class="tab-content" id="tab-content"><div class="empty">No data loaded.</div></div>
   </div>
@@ -465,9 +270,14 @@
     <div class="lookup-panel">
       <div class="panel-title">Slab Lookup</div>
       <div class="lookup-status" id="lookup-status">No lookup &#8212; Origin / Finish disabled</div>
-      <textarea id="lookup-input" placeholder="Paste Sheet formula output here&#8230;"></textarea>
+      <!-- 9. Refresh from Sheet button -->
+      <div class="lookup-actions">
+        <button class="btn btn-outline" id="refresh-lookup-btn" style="padding:5px 12px;font-size:11px">&#8635; Refresh from Sheet</button>
+        <span id="refresh-status" style="font-size:11px;color:var(--text-faint)"></span>
+      </div>
+      <textarea id="lookup-input" placeholder="Or paste Sheet formula output here&#8230;"></textarea>
       <div class="formula-hint">
-        <strong>Sheet formula:</strong><br>
+        <strong>Manual formula:</strong><br>
         ="{" &amp; TEXTJOIN(",",TRUE, IF(Slabs!A2:A="","", """" &amp; Slabs!A2:A &amp; """:{""t"":" &amp; Slabs!F2:F &amp; ",""o"":""" &amp; Slabs!L2:L &amp; """,""f"":""" &amp; Slabs!H2:H &amp; """}" )) &amp; "}"
       </div>
     </div>
@@ -480,14 +290,16 @@
 
 <script>
 (function () {
-  var WEBSITE_ID = '48d5d4fe-be26-4af5-a5c5-82be75ce9ae7';
-  var API_KEY    = 'api_mq1H9YMXCyiTTSKRiMldvbtsfdRBKdD4';
-  var PW         = ['N','i','u','n','i','a','2','0','1','3','!'].join('');
-  var PAGE_SIZE  = 500;
+  var WEBSITE_ID  = '48d5d4fe-be26-4af5-a5c5-82be75ce9ae7';
+  var API_KEY     = 'api_mq1H9YMXCyiTTSKRiMldvbtsfdRBKdD4';
+  var BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzdG5i5bKPgtxHlCJkbMBUUq8LBlpnC46fwqoHQcLSN_UodxxjpyN7CwKeUmESskxr1/exec';
+  var PW          = ['N','i','u','n','i','a','2','0','1','3','!'].join('');
+  var PAGE_SIZE   = 500;
 
-  var allEvents  = [];
-  var slabLookup = {};
-  var activeTab  = 'material';
+  var allEvents    = [];
+  var slabLookup   = {};
+  var activeTab    = 'material';
+  var currentCounts = {};
 
   /* ── Gate ── */
   function checkPw() {
@@ -512,7 +324,10 @@
   })();
 
   document.getElementById('lookup-input').oninput = function() {
-    var raw = this.value.trim();
+    parseLookup(this.value.trim());
+  };
+
+  function parseLookup(raw) {
     if (!raw) {
       slabLookup = {};
       try { localStorage.removeItem('glg_slab_lookup'); } catch(e) {}
@@ -527,7 +342,7 @@
     } catch(e) {
       document.getElementById('lookup-status').textContent = 'Invalid JSON';
     }
-  };
+  }
 
   function applyLookup() {
     var n  = Object.keys(slabLookup).length;
@@ -540,17 +355,64 @@
     });
   }
 
-  /* ── Fetch ── */
+  /* ── 9. Refresh lookup from Apps Script via JSONP ── */
+  document.getElementById('refresh-lookup-btn').onclick = function() {
+    var btn    = this;
+    var status = document.getElementById('refresh-status');
+    btn.disabled = true;
+    status.textContent = 'Fetching\u2026';
+
+    var cbName = 'glg_lookup_cb_' + Date.now();
+    var script = document.createElement('script');
+    var timer  = setTimeout(function() {
+      status.textContent = 'Timeout \u2014 is the Apps Script updated?';
+      btn.disabled = false;
+      if (script.parentNode) document.body.removeChild(script);
+      delete window[cbName];
+    }, 15000);
+
+    window[cbName] = function(data) {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) document.body.removeChild(script);
+      btn.disabled = false;
+      if (data && typeof data === 'object' && !data.error) {
+        var raw = JSON.stringify(data);
+        slabLookup = data;
+        try { localStorage.setItem('glg_slab_lookup', raw); } catch(e) {}
+        document.getElementById('lookup-input').value = raw;
+        applyLookup();
+        if (allEvents.length) renderTab();
+        status.textContent = '\u2713 Refreshed';
+        setTimeout(function() { status.textContent = ''; }, 3000);
+      } else {
+        status.textContent = 'Error: ' + (data && data.error ? data.error : 'unexpected response');
+      }
+    };
+
+    script.src = BACKEND_URL + '?action=getSlabLookup&callback=' + cbName;
+    script.onerror = function() {
+      clearTimeout(timer);
+      btn.disabled = false;
+      status.textContent = 'Script load error';
+      delete window[cbName];
+    };
+    document.body.appendChild(script);
+  };
+
+  /* ── Fetch events ── */
   document.getElementById('load-btn').onclick = function() { loadData(); };
 
   async function loadData() {
     var days    = parseInt(document.getElementById('period').value);
     var endAt   = Date.now();
-    var startAt = days === 0 ? new Date('2024-01-01').getTime() : endAt - days * 86400000;
+    // 3. All time uses 3 years back, not hardcoded 2024
+    var startAt = days === 0 ? Date.now() - 3 * 365 * 24 * 3600 * 1000 : endAt - days * 86400000;
     var btn     = document.getElementById('load-btn');
 
     btn.disabled = true;
     document.getElementById('stats-bar').classList.remove('visible');
+    document.getElementById('export-btn').disabled = true;
     allEvents = [];
 
     var page = 1, failed = false;
@@ -579,11 +441,19 @@
     if (!allEvents.length) { setStatus('No slab-view events found in this period.'); return; }
 
     setStatus(allEvents.length + ' slab-view events &mdash; ' + page + ' page(s) fetched.');
+
+    // 5. Date range display
+    var fmt = { day: '2-digit', month: 'short', year: 'numeric' };
+    document.getElementById('stat-range').innerHTML =
+      new Date(startAt).toLocaleDateString('en-GB', fmt) + '<br>' +
+      new Date(endAt).toLocaleDateString('en-GB', fmt);
+
     document.getElementById('s-views').textContent     = allEvents.length;
     document.getElementById('s-unique').textContent    = new Set(allEvents.map(function(e) { return sid(pt(e)); })).size;
     document.getElementById('s-materials').textContent = new Set(allEvents.map(function(e) { return mat(pt(e)); })).size;
     document.getElementById('s-pages').textContent     = page;
     document.getElementById('stats-bar').classList.add('visible');
+    document.getElementById('export-btn').disabled = false;
     renderTab();
     renderRecent();
   }
@@ -595,12 +465,9 @@
   function mat(t) { var m = t.match(/^(.+?)\s*\(GLG-/); return m ? m[1].trim() : (t.split('\u2014')[0].trim() || '(unknown)'); }
   function sid(t) { var m = t.match(/\((GLG-[^)]+)\)/); return m ? m[1] : '(unknown)'; }
 
-  // Thickness: from event properties first, then lookup, then unknown
   function getThickness(e) {
-    // Try direct event properties (Umami may include them at top level or in a data object)
     var t = e.thickness || (e.data && e.data.thickness);
     if (t != null && t !== '') return t + ' cm';
-    // Fall back to lookup
     var lu = slabLookup[sid(pt(e))];
     if (lu && lu.t != null) return lu.t + ' cm';
     return '(unknown)';
@@ -631,23 +498,24 @@
         case 'thickness': k = getThickness(e); break;
         case 'origin':    k = lu && lu.o ? lu.o : '(unknown)'; break;
         case 'finish':    k = lu && lu.f ? lu.f : '(unknown)'; break;
-        case 'country':   k = e.country  || '(unknown)'; break;
-        case 'device':    k = e.device   || '(unknown)'; break;
+        case 'country':   k = e.country || '(unknown)'; break;
+        case 'device':    k = e.device  || '(unknown)'; break;
         default:          k = '(unknown)';
       }
       counts[k] = (counts[k] || 0) + 1;
     });
+    currentCounts = counts;
     var sorted = Object.entries(counts).sort(function(a,b) { return b[1]-a[1]; });
     var max    = sorted.length ? sorted[0][1] : 1;
     el.innerHTML = sorted.map(function(kv) {
       return '<div class="bar-row">' +
-        '<span class="bar-label" title="'+kv[0]+'">'+kv[0]+'</span>' +
-        '<div class="bar-track"><div class="bar-fill" style="width:'+(kv[1]/max*100).toFixed(1)+'%"></div></div>' +
-        '<span class="bar-count">'+kv[1]+'</span></div>';
+        '<span class="bar-label" title="' + kv[0] + '">' + kv[0] + '</span>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + (kv[1]/max*100).toFixed(1) + '%"></div></div>' +
+        '<span class="bar-count">' + kv[1] + '</span></div>';
     }).join('');
   }
 
-  /* ── Recent ── */
+  /* ── Recent (2. city added) ── */
   function renderRecent() {
     var el   = document.getElementById('recent-events');
     var list = allEvents.slice().sort(function(a,b) {
@@ -655,17 +523,38 @@
     }).slice(0, 15);
     if (!list.length) { el.innerHTML = '<div class="empty">No events.</div>'; return; }
     el.innerHTML = list.map(function(e) {
-      var raw = e.createdAt || e.created_at;
-      var ts  = raw ? new Date(raw).toLocaleString('pl-PL', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+      var raw      = e.createdAt || e.created_at;
+      var ts       = raw ? new Date(raw).toLocaleString('pl-PL', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+      // 2. City + country combined
+      var location = [e.city, e.country].filter(Boolean).join(', ');
       return '<div class="event-row">' +
-        '<div class="event-slab">'+sid(pt(e))+'</div>' +
+        '<div class="event-slab">' + sid(pt(e)) + '</div>' +
         '<div class="event-meta">' +
-          '<span>'+mat(pt(e))+'</span>' +
-          (ts ? '<span>'+ts+'</span>' : '') +
-          (e.country ? '<span>'+e.country+'</span>' : '') +
+          '<span>' + mat(pt(e)) + '</span>' +
+          (ts       ? '<span>' + ts + '</span>' : '') +
+          (location ? '<span>' + location + '</span>' : '') +
         '</div></div>';
     }).join('');
   }
+
+  /* ── 6. Export CSV ── */
+  document.getElementById('export-btn').onclick = function() {
+    var sorted = Object.entries(currentCounts).sort(function(a,b) { return b[1]-a[1]; });
+    var header = [activeTab, 'views'].join(',');
+    var rows   = sorted.map(function(kv) {
+      return '"' + kv[0].replace(/"/g, '""') + '",' + kv[1];
+    });
+    var csv  = [header].concat(rows).join('\n');
+    var blob = new Blob([csv], { type: 'text/csv' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'glg-analytics-' + activeTab + '-' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
 })();
 </script>
