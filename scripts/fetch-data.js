@@ -64,7 +64,7 @@ const STATUS_MAP = {
 const ORIGIN_MAP = {
   'Indie': 'India', 'Chiny': 'China', 'Brazylia': 'Brazil',
   'RPA': 'South Africa', 'Norwegia': 'Norway', 'Włochy': 'Italy',
-  'Hiszpania': 'Spain', 'Inne': 'Other'
+  'Hiszpania': 'Spain', 'Szwecja': 'Sweden', 'Inne': 'Other'
 };
 const STONE_TYPE_MAP = {
   'granit':   { pl: 'Granit',   en: 'Granite' },
