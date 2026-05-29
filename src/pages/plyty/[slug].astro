@@ -19,7 +19,6 @@ const { slab } = Astro.props;
 const gallery = [
   ...slab.photos.full.map(p => ({ key: p, alt: `${slab.material_pl} — pełna płyta` })),
   ...slab.photos.detail.map(p => ({ key: p, alt: `${slab.material_pl} — detal` })),
-  ...slab.photos.edge.map(p => ({ key: p, alt: `${slab.material_pl} — krawędź` })),
   ...slab.photos.wet.map(p => ({ key: p, alt: `${slab.material_pl} — mokra` }))
 ];
 const hasPhotos = gallery.length > 0;
@@ -85,7 +84,6 @@ const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`https://katalog.g
           {slab.stone_type && <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.stoneType}</span><span class="slab-specs__value">{slab.stone_type.pl}</span></div>}
           {slab.colour && <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.colour}</span><span class="slab-specs__value">{slab.colour.pl}</span></div>}
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.finish}</span><span class="slab-specs__value">{slab.finish.pl}</span></div>
-          <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.edge}</span><span class="slab-specs__value">{slab.edge.pl}</span></div>
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.origin}</span><span class="slab-specs__value">{slab.origin_pl}</span></div>
           <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.status}</span><span class="slab-specs__value">{slab.status.pl}</span></div>
           {slab.date_received && <div class="slab-specs__row"><span class="slab-specs__label">{i18n.slab.received}</span><span class="slab-specs__value">{slab.date_received}</span></div>}
